@@ -1,0 +1,42 @@
+[fedora-40-kernel]
+name=Fedora 40 - $basearch
+#baseurl=http://download.example/pub/fedora/linux/releases/40/Everything/$basearch/os/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-40&arch=$basearch
+enabled=1
+countme=1
+metadata_expire=6h
+repo_gpgcheck=0
+type=rpm
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-40-$basearch
+includepkgs=kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel
+priority=100
+skip_if_unavailable=False
+
+[fedora-40-kernel-debuginfo]
+name=Fedora 40 - $basearch - Debug
+#baseurl=http://download.example/pub/fedora/linux/releases/40/Everything/$basearch/debug/tree/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-debug-40&arch=$basearch
+enabled=0
+metadata_expire=6h
+repo_gpgcheck=0
+type=rpm
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-40-$basearch
+includepkgs=kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel
+priority=100
+skip_if_unavailable=False
+
+[fedora-40-kernel-source]
+name=Fedora 40 - Source
+#baseurl=http://download.example/pub/fedora/linux/releases/40/Everything/source/tree/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-source-40&arch=$basearch
+enabled=0
+metadata_expire=6h
+repo_gpgcheck=0
+type=rpm
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-40-$basearch
+includepkgs=kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel
+priority=100
+skip_if_unavailable=False

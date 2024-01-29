@@ -1,0 +1,4 @@
+cosign.key
+cosign.private
+/Containerfile
+/etc-diff.txt

@@ -1,0 +1,9 @@
+[Unit]
+Description=Restart tailscaled after sleep
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl restart tailscaled.service
+
+[Install]
+WantedBy=sleep.target

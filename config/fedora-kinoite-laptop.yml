@@ -1,0 +1,116 @@
+# image will be published to ghcr.io/<user>/<name>
+name: fedora-kinoite-laptop
+# description will be included in the image's metadata
+description: Overlay for fedora-kinoite containing the personal modifications I use on my laptop.
+
+# the base image to build on top of (FROM) and the version tag to use
+base-image: quay.io/fedora/fedora-kinoite
+image-version: rawhide
+
+# module configuration, executed in order
+# you can include multiple instances of the same module
+modules:
+  - type: files
+    files:
+      - usr: /usr
+      - etc: /etc
+
+  # We use a stable kernel instead of the one from rawhide
+  - type: script
+    snippets:
+      - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel --experimental --from repo=fedora-40-kernel
+      - rm -f /usr/lib/modules/*/initramfs.img
+      - rmdir --ignore-fail-on-non-empty /usr/lib/modules/*
+
+  # WORKAROUND for packages which deploy to /opt
+  - type: script
+    snippets:
+      - mv /opt /opt.orig
+      - ln -s /usr/lib/opt /opt
+
+  # Do local packages as script because we can't do replace with the bluebuild module
+  - type: script
+    snippets:
+      - rpm-ostree override replace /tmp/config/rpms/krfb-24.02.0-1.fc41_jxpryde.x86_64.rpm /tmp/config/rpms/krfb-libs-24.02.0-1.fc41_jxpryde.x86_64.rpm
+      - rpm-ostree install /tmp/config/rpms/1password-ostree-workaround-0.0.0_main-1.fc41.x86_64.rpm
+
+  - type: rpm-ostree
+    repos:
+      # This is handled by the files module above
+    install:
+      # Proprietary
+      - 1password
+      - google-chrome-stable
+      - tailscale
+      # RPMFusion
+      - ffmpeg
+      - ffmpeg-libs
+      - gstreamer1-plugins-bad-freeworld
+      - gstreamer1-plugins-ugly
+      - gstreamer1-vaapi
+      - mesa-va-drivers-freeworld
+      - mesa-vdpau-drivers-freeworld
+      # Media
+      - libva-utils
+      - mpv
+      # CLI Utils
+      - htop
+      - mosh
+      - ncdu
+      - stow
+      - tmux
+      - vim
+      - zsh
+      # Development
+      - binutils
+      - patchelf
+      # Secure Boot and initramfs
+      - sbsigntools
+      - systemd-boot-unsigned
+      - systemd-ukify
+      - zstd
+      # Virtualization
+      - guestfs-tools
+      - krdp-server
+      - libvirt-daemon-config-network
+      - libvirt-daemon-kvm
+      - python3-libguestfs
+      - qemu-kvm
+      - virt-install
+      - virt-manager
+      - virt-top
+      - virt-viewer
+    remove:
+      # Replace with freeworld packages from rpmfusion
+      - libavfilter-free
+      - libavformat-free
+      - libpostproc-free
+      - libswresample-free
+      - libavutil-free
+      - libswscale-free
+      - libavcodec-free
+      - mesa-va-drivers
+
+  - type: script
+    snippets:
+      - rm /opt
+      - mv /opt.orig /opt
+    scripts:
+      - regen-initramfs.sh
+
+  - type: systemd
+    system:
+      enabled:
+        - tailscaled-restart.service
+        - libvirtd.service
+      disabled:
+      masked:
+      unmasked:
+    user:
+      enabled:
+      disabled:
+      masked:
+      unmasked:
+
+
+  - type: signing # this sets up the proper policy & signing files for signed images to work fully
