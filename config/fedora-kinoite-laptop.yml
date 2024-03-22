@@ -63,6 +63,7 @@ modules:
       - zsh
       # Development
       - binutils
+      - distrobox
       - patchelf
       # Secure Boot and initramfs
       - sbsigntools
@@ -101,6 +102,8 @@ modules:
   - type: systemd
     system:
       enabled:
+        - systemd-timesyncd.service
+        - tailscaled.service
         - tailscaled-restart.service
         - libvirtd.service
       disabled:
