@@ -38,4 +38,4 @@ cosign verify --key cosign.pub $REGISTRY_IMAGE
 * [Fedora Kinoite](https://docs.fedoraproject.org/en-US/fedora-kinoite/)
 * [RPM Fusion](https://rpmfusion.org/)
 * [Boot OSTree Deployments with UEFI Secure Boot and TPM secrets](https://github.com/prydom/finalize-ostree-uki)
-- [1Password LD_PRELOAD inotify Workaround - inotify_add_watch](https://github.com/prydom/1password-ldpreload-inotify)
+* [1Password LD_PRELOAD inotify Workaround - inotify_add_watch](https://github.com/prydom/1password-ldpreload-inotify)

@@ -3,3 +3,4 @@ cosign.private
 /Containerfile
 /etc-diff.txt
 /bluebuild-install.sh
+/*.tar
