@@ -33,9 +33,10 @@ modules:
       - rmdir --ignore-fail-on-non-empty /usr/lib/modules/*
       - /tmp/config/scripts/regen-initramfs.sh
 
-  # WORKAROUND for packages which deploy to /opt
   - type: script
     snippets:
+      # WORKAROUND: for packages which deploy to /opt
+      # TODO: look at switching to ostree-state-overlay@opt.service
       - mv /opt /opt.orig
       - ln -s /usr/lib/opt /opt
 
@@ -96,6 +97,12 @@ modules:
       - libswscale-free
       - libavcodec-free
       - mesa-va-drivers
+
+  - type: script
+    snippets:
+      # WORKAROUND: Create the group for 1Password with the a consistent GID
+      # Also, 1Password doesn't use the --system flag on their groupadd call
+      - groupadd -g 962 "onepassword"
 
   # Proprietary
   - type: rpm-ostree
