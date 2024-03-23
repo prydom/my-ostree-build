@@ -10,10 +10,20 @@ image-version: rawhide
 # module configuration, executed in order
 # you can include multiple instances of the same module
 modules:
+  # copy only files needed by rpm and dracut
   - type: files
     files:
-      - usr: /usr
-      - etc: /etc
+      - etc/yum.repos.d: /etc/yum.repos.d
+      - etc/pki: /etc/pki
+      - etc/dracut.conf.d: /etc/dracut.conf.d
+
+  # Secure Boot and initramfs
+  - type: rpm-ostree
+    install:
+      - sbsigntools
+      - systemd-boot-unsigned
+      - systemd-ukify
+      - zstd
 
   # We use a stable kernel instead of the one from rawhide
   - type: script
@@ -21,6 +31,7 @@ modules:
       - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel --experimental --from repo=fedora-40-kernel
       - rm -f /usr/lib/modules/*/initramfs.img
       - rmdir --ignore-fail-on-non-empty /usr/lib/modules/*
+      - /tmp/config/scripts/regen-initramfs.sh
 
   # WORKAROUND for packages which deploy to /opt
   - type: script
@@ -28,32 +39,9 @@ modules:
       - mv /opt /opt.orig
       - ln -s /usr/lib/opt /opt
 
-  # Do local packages as script because we can't do replace with the bluebuild module
-  - type: script
-    snippets:
-      - rpm-ostree override replace /tmp/config/rpms/krfb-24.02.0-1.fc41_jxpryde.x86_64.rpm /tmp/config/rpms/krfb-libs-24.02.0-1.fc41_jxpryde.x86_64.rpm
-      - rpm-ostree install /tmp/config/rpms/1password-ostree-workaround-0.0.0_main-1.fc41.x86_64.rpm
-
+  # CLI Utils
   - type: rpm-ostree
-    repos:
-      # This is handled by the files module above
     install:
-      # Proprietary
-      - 1password
-      - google-chrome-stable
-      - tailscale
-      # RPMFusion
-      - ffmpeg
-      - ffmpeg-libs
-      - gstreamer1-plugins-bad-freeworld
-      - gstreamer1-plugins-ugly
-      - gstreamer1-vaapi
-      - mesa-va-drivers-freeworld
-      - mesa-vdpau-drivers-freeworld
-      # Media
-      - libva-utils
-      - mpv
-      # CLI Utils
       - htop
       - mosh
       - ncdu
@@ -61,20 +49,10 @@ modules:
       - tmux
       - vim
       - zsh
-      # Remote Access
-      - krdp-server
-      # Development
-      - binutils
-      - bootc
-      - distrobox
-      - kate
-      - patchelf
-      # Secure Boot and initramfs
-      - sbsigntools
-      - systemd-boot-unsigned
-      - systemd-ukify
-      - zstd
-      # Virtualization
+
+  # Virtualization
+  - type: rpm-ostree
+    install:
       - guestfs-tools
       - libvirt-daemon-config-network
       - libvirt-daemon-kvm
@@ -84,6 +62,30 @@ modules:
       - virt-manager
       - virt-top
       - virt-viewer
+
+    # Development
+  - type: rpm-ostree
+    install:
+      - binutils
+      - bootc
+      - distrobox
+      - kate
+      - patchelf
+
+  # Media and RPMFusion packages
+  - type: rpm-ostree
+    install:
+      # Media
+      - libva-utils
+      - mpv
+      # RPMFusion
+      - ffmpeg
+      - ffmpeg-libs
+      - gstreamer1-plugins-bad-freeworld
+      - gstreamer1-plugins-ugly
+      - gstreamer1-vaapi
+      - mesa-va-drivers-freeworld
+      - mesa-vdpau-drivers-freeworld
     remove:
       # Replace with freeworld packages from rpmfusion
       - libavfilter-free
@@ -95,12 +97,24 @@ modules:
       - libavcodec-free
       - mesa-va-drivers
 
+  # Proprietary
+  - type: rpm-ostree
+    install:
+      - 1password
+      - google-chrome-stable
+      - tailscale
+
+  # Do local packages as script because we can't do replace with the bluebuild module
   - type: script
     snippets:
-      - rm /opt
-      - mv /opt.orig /opt
-    scripts:
-      - regen-initramfs.sh
+      - rpm-ostree override replace /tmp/config/rpms/krfb-24.02.0-1.fc41_jxpryde.x86_64.rpm /tmp/config/rpms/krfb-libs-24.02.0-1.fc41_jxpryde.x86_64.rpm
+      - rpm-ostree install /tmp/config/rpms/1password-ostree-workaround-0.0.0_main-1.fc41.x86_64.rpm
+
+  # copy rest of customizations
+  - type: files
+    files:
+      - usr: /usr
+      - etc: /etc
 
   - type: systemd
     system:
@@ -118,5 +132,9 @@ modules:
       masked:
       unmasked:
 
+  - type: script
+    snippets:
+      - rm /opt
+      - mv /opt.orig /opt
 
   - type: signing # this sets up the proper policy & signing files for signed images to work fully
