@@ -1,7 +1,7 @@
 [koji]
 name=Koji $basearch
 baseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/$basearch/
-enabled=1
+enabled=0
 gpgcheck=0
 repo_gpgcheck=0
 # DISABLE KOJI WHEN NOT BROKEN - gnutls was broken on 2024-03-21
