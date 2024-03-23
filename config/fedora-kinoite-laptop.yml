@@ -61,9 +61,13 @@ modules:
       - tmux
       - vim
       - zsh
+      # Remote Access
+      - krdp-server
       # Development
       - binutils
+      - bootc
       - distrobox
+      - kate
       - patchelf
       # Secure Boot and initramfs
       - sbsigntools
@@ -72,7 +76,6 @@ modules:
       - zstd
       # Virtualization
       - guestfs-tools
-      - krdp-server
       - libvirt-daemon-config-network
       - libvirt-daemon-kvm
       - python3-libguestfs
