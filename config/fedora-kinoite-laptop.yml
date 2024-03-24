@@ -49,6 +49,7 @@ modules:
       - stow
       - tmux
       - vim
+      - ydotool
       - zsh
 
   # Virtualization
@@ -64,12 +65,13 @@ modules:
       - virt-top
       - virt-viewer
 
-    # Development
+  # Development
   - type: rpm-ostree
     install:
       - binutils
       - bootc
       - distrobox
+      - dnf5
       - kate
       - patchelf
 
