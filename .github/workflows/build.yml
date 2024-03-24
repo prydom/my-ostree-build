@@ -23,11 +23,6 @@ jobs:
           # !! Add your recipes here
           - fedora-kinoite-laptop.yml
     steps:
-      # This is required in order to take advantage of docker's cache integration with GitHub Actions.experimental
-      # https://github.com/moby/buildkit?tab=readme-ov-file#github-actions-cache-
-      - name: Expose GitHub Runtime
-        uses: crazy-max/ghaction-github-runtime@v3
-
       # the build is fully handled by the reusable github action
       - name: Build Custom Image
         uses: prydom/bluebuild-github-action@enable-docker-container-driver
