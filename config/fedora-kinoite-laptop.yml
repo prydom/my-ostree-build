@@ -130,10 +130,11 @@ modules:
   - type: systemd
     system:
       enabled:
-        - systemd-timesyncd.service
-        - tailscaled.service
-        - tailscaled-restart.service
         - libvirtd.service
+        - systemd-timesyncd.service
+        - tailscaled-restart.service
+        - tailscaled.service
+        - ydotool.service
       disabled:
       masked:
       unmasked:
