@@ -103,11 +103,13 @@ modules:
       # WORKAROUND: Create the group for 1Password with the a consistent GID
       # Also, 1Password requires the GID to be > 1000
       - groupadd -g 5001 "onepassword"
+      - groupadd -g 5002 "onepassword-cli"
 
   # Proprietary
   - type: rpm-ostree
     install:
       - 1password
+      - 1password-cli
       - google-chrome-stable
       - tailscale
 
