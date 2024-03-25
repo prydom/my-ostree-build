@@ -1,0 +1,29 @@
+name: snapshot-rawhide
+on:
+  schedule:
+    - cron: "00 14 * * 1"
+  push:
+    branches:
+      - snapshot-rawhide
+  workflow_dispatch: # allow manually triggering builds
+jobs:
+  snapshot-rawhide:
+    name: Snapshot Fedora Rawhide Kinoite
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pull the container to the runner and then push it
+        shell: bash
+        run: |
+          docker pull quay.io/fedora/fedora-kinoite:rawhide
+          docker tag quay.io/fedora/fedora-kinoite:rawhide ghcr.io/${{ github.actor }}/fedora-kinoite:rawhide-snapshot
+          docker push ghcr.io//${{ github.actor }}/fedora-kinoite:rawhide-snapshot

@@ -19,7 +19,7 @@ To configure private container registries use the `/etc/ostree/auth.json` file.
 
 To rebase an existing atomic Fedora installation to the latest build:
 
-- For this image you should first to bootstrap [Boot OSTree Deployments with UEFI Secure Boot and TPM secrets](https://github.com/prydom/finalize-ostree-uki) although I don't think it will be un-bootable without.
+- For this image you should first bootstrap [Boot OSTree Deployments with UEFI Secure Boot and TPM secrets](https://github.com/prydom/finalize-ostree-uki) although I don't think it will be un-bootable without.
 - Determine what `$REGISTRY_IMAGE` should be. It is the address of the image in the [containers-transports(5)](https://github.com/containers/image/blob/main/docs/containers-transports.5.md) syntax.
 - First rebase to the unsigned image, to get the proper signing keys and policies installed:
   ```

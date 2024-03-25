@@ -3,6 +3,8 @@ on:
   schedule:
     - cron: "00 15 * * *"
   push:
+    branches:
+      - main
     paths-ignore: # don't rebuild if only documentation has changed
       - "**.md"
   workflow_dispatch: # allow manually triggering builds
