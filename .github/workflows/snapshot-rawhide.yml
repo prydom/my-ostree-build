@@ -24,6 +24,7 @@ jobs:
       - name: Pull the container to the runner and then push it
         shell: bash
         run: |
+          set -xv
           docker pull quay.io/fedora/fedora-kinoite:rawhide
-          docker tag quay.io/fedora/fedora-kinoite:rawhide ghcr.io/${{ github.actor }}/fedora-kinoite:rawhide-snapshot
+          docker image tag quay.io/fedora/fedora-kinoite:rawhide ghcr.io/${{ github.actor }}/fedora-kinoite:rawhide-snapshot
           docker push ghcr.io//${{ github.actor }}/fedora-kinoite:rawhide-snapshot
