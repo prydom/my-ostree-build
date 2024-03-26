@@ -4,8 +4,8 @@ name: fedora-kinoite-laptop
 description: Overlay for fedora-kinoite containing the personal modifications I use on my laptop.
 
 # the base image to build on top of (FROM) and the version tag to use
-base-image: quay.io/fedora/fedora-kinoite
-image-version: rawhide
+base-image: ghcr.io/prydom/fedora-kinoite
+image-version: rawhide-snapshot
 
 # module configuration, executed in order
 # you can include multiple instances of the same module
@@ -28,7 +28,7 @@ modules:
   # We use a stable kernel instead of the one from rawhide
   - type: script
     snippets:
-      - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel --experimental --from repo=fedora-40-kernel
+      - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-headers kernel --experimental --from repo=fedora-40-kernel
       - rm -f /usr/lib/modules/*/initramfs.img
       - rmdir --ignore-fail-on-non-empty /usr/lib/modules/*
       - /tmp/config/scripts/regen-initramfs.sh
@@ -115,11 +115,13 @@ modules:
       - google-chrome-stable
       - tailscale
 
-  # Do local packages as script because we can't do replace with the bluebuild module
+  # Do local package replacements as script because we can't do replace with the bluebuild module
   - type: script
     snippets:
       - rpm-ostree override replace /tmp/config/rpms/krfb-24.02.0-1.fc41_jxpryde.x86_64.rpm /tmp/config/rpms/krfb-libs-24.02.0-1.fc41_jxpryde.x86_64.rpm
-      - rpm-ostree install /tmp/config/rpms/1password-ostree-workaround-0.0.0_main-1.fc41.x86_64.rpm
+
+  # this sets up the proper policy & signing files for signed images to work fully
+  - type: signing
 
   # copy rest of customizations
   - type: files
@@ -144,9 +146,22 @@ modules:
       masked:
       unmasked:
 
+  # BUST LAYER CACHE IF THERE ARE UPDATES
+  # We still download packages from whatever repo is suggested by Fedora's metalink
+  # But we trust UWaterloo to be somewhat quickly up to date.
+  - type: containerfile
+    snippets:
+      - ADD https://mirror.csclub.uwaterloo.ca/fedora/linux/development/rawhide/Everything/x86_64/os/repodata/repomd.xml /tmp/mirror-cache-bust
+
+  # Upgrade all in one layer if there are any new packages
+  - type: script
+    snippets:
+      - dnf5 upgrade -y
+      # WORKAROUND: do last because my RPM depends on 1Password not ever being upgraded
+      - rpm-ostree install /tmp/config/rpms/1password-ostree-workaround-0.0.0_main-1.fc41.x86_64.rpm
+
+  # WORKAROUND: Put back /opt
   - type: script
     snippets:
       - rm /opt
       - mv /opt.orig /opt
-
-  - type: signing # this sets up the proper policy & signing files for signed images to work fully
