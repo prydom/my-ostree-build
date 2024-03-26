@@ -40,18 +40,6 @@ modules:
       - mv /opt /opt.orig
       - ln -s /usr/lib/opt /opt
 
-  # CLI Utils
-  - type: rpm-ostree
-    install:
-      - htop
-      - mosh
-      - ncdu
-      - stow
-      - tmux
-      - vim
-      - ydotool
-      - zsh
-
   # Virtualization
   - type: rpm-ostree
     install:
@@ -64,16 +52,6 @@ modules:
       - virt-manager
       - virt-top
       - virt-viewer
-
-  # Development
-  - type: rpm-ostree
-    install:
-      - binutils
-      - bootc
-      - distrobox
-      - dnf5
-      - kate
-      - patchelf
 
   # Media and RPMFusion packages
   - type: rpm-ostree
@@ -114,6 +92,28 @@ modules:
       - 1password-cli
       - google-chrome-stable
       - tailscale
+
+  # Development
+  - type: rpm-ostree
+    install:
+      - binutils
+      - bootc
+      - distrobox
+      - dnf5
+      - kate
+      - patchelf
+
+  # CLI Utils
+  - type: rpm-ostree
+    install:
+      - htop
+      - mosh
+      - ncdu
+      - stow
+      - tmux
+      - vim
+      - ydotool
+      - zsh
 
   # Do local package replacements as script because we can't do replace with the bluebuild module
   - type: script
