@@ -40,6 +40,11 @@ modules:
       - mv /opt /opt.orig
       - ln -s /usr/lib/opt /opt
 
+  # WORKAROUND FORCE REPLACE XZ for CVE-2024-3094
+  - type: script
+    snippets:
+      - rpm-ostree override replace --experimental --from repo=koji xz xz-libs
+
   # Virtualization
   - type: rpm-ostree
     install:
