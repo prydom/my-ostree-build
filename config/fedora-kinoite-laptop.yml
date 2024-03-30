@@ -165,9 +165,10 @@ modules:
       # WORKAROUND: do last because my RPM depends on 1Password not ever being upgraded
       - rpm-ostree install /tmp/config/rpms/1password-ostree-workaround-0.0.0_main-1.fc41.x86_64.rpm
 
-  # WORKAROUND: Put back /opt and copy into /etc/containers/policy.json
+  # WORKAROUND: Put back /opt and merge /usr/etc into /etc
   - type: script
     snippets:
       - rm /opt
       - mv /opt.orig /opt
-      - cp /usr/etc/containers/policy.json /etc/containers/policy.json || true
+      - cp -al /usr/etc /etc
+      - rm -rf /usr/etc
