@@ -165,5 +165,5 @@ modules:
     snippets:
       - rm /opt
       - mv /opt.orig /opt
-      - cp -fal /usr/etc /
+      - cp -fa /usr/etc /
       - rm -rf /usr/etc/*
