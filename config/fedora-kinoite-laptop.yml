@@ -166,4 +166,4 @@ modules:
       - rm /opt
       - mv /opt.orig /opt
       - cp -fal /usr/etc /
-      - rm -rf /usr/etc
+      - rm -rf /usr/etc/*
