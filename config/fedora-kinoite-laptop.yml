@@ -115,11 +115,6 @@ modules:
       - ydotool
       - zsh
 
-  # Do local package replacements as script because we can't do replace with the bluebuild module
-  - type: script
-    snippets:
-      - rpm-ostree override replace /tmp/config/rpms/krfb-24.02.0-1.fc41_jxpryde.x86_64.rpm /tmp/config/rpms/krfb-libs-24.02.0-1.fc41_jxpryde.x86_64.rpm
-
   # this sets up the proper policy & signing files for signed images to work fully
   - type: signing
 
