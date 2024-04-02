@@ -10,7 +10,7 @@ type=rpm
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-40-$basearch
 includepkgs=kernel*
-priority=100
+priority=98
 skip_if_unavailable=False
 
 [fedora-40-kernel-debuginfo]
@@ -24,7 +24,7 @@ type=rpm
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-40-$basearch
 includepkgs=kernel*
-priority=100
+priority=98
 skip_if_unavailable=False
 
 [fedora-40-kernel-source]
@@ -38,5 +38,5 @@ type=rpm
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-40-$basearch
 includepkgs=kernel*
-priority=100
+priority=98
 skip_if_unavailable=False
