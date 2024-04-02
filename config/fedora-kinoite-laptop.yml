@@ -20,6 +20,7 @@ modules:
   # Secure Boot and initramfs
   - type: rpm-ostree
     install:
+      - binutils
       - sbsigntools
       - systemd-boot-unsigned
       - systemd-ukify
@@ -39,6 +40,17 @@ modules:
       # TODO: look at switching to ostree-state-overlay@opt.service
       - mv /opt /opt.orig
       - ln -s /usr/lib/opt /opt
+
+  # Package management
+  - type: rpm-ostree
+    install:
+      - dnf5
+
+  # Forces the image to be in sync with mirrors before the larger package overlays
+  # We do this again later on with a cache bust.
+  - type: script
+    snippets:
+      - dnf5 '--exclude=kernel*' upgrade -y
 
   # Virtualization
   - type: rpm-ostree
@@ -96,10 +108,8 @@ modules:
   # Development
   - type: rpm-ostree
     install:
-      - binutils
       - bootc
       - distrobox
-      - dnf5
       - kate
       - patchelf
 
@@ -151,7 +161,7 @@ modules:
   # Upgrade all in one layer if there are any new packages
   - type: script
     snippets:
-      - dnf5 upgrade -y
+      - dnf5 '--exclude=kernel*' upgrade -y
       # WORKAROUND: do last because my RPM depends on 1Password not ever being upgraded
       - rpm-ostree install /tmp/config/rpms/1password-ostree-workaround-0.0.0_main-1.fc41.x86_64.rpm
 
