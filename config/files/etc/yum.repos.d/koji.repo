@@ -6,4 +6,4 @@ gpgcheck=0
 repo_gpgcheck=0
 # DISABLE KOJI WHEN NOT BROKEN - xz compromised CVE-2024-3094
 includepkgs=xz*
-priority=100
+priority=80
