@@ -1,8 +1,8 @@
 
 RUN \
   --mount=type=tmpfs,target=/var \
-  --mount=type=bind,from=ghcr.io/prydom/fedora-kinoite-laptop-rpms,src=/rpms,dst=/tmp/rpms \
+  --mount=type=bind,from=ghcr.io/prydom/fedora-kinoite-laptop-rpms,src=/,dst=/tmp/rpms \
   echo "========== Copy RPMs ==========" \
-  && cp /tmp/rpms/* /usr/share/local-rpm-repo \
+  && cp -r /tmp/rpms/* /usr/share/local-rpm-repo \
   && echo "========== End Copy RPMs ==========" \
   && ostree container commit
