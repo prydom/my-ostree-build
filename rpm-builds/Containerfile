@@ -4,15 +4,16 @@ RUN \
     dnf -y install fedora-packager rpmdevtools gcc bash \
     && useradd -m builder
 
-#SHELL ["/bin/bash", "-c"]
 WORKDIR /home/builder
 USER builder:builder
 RUN \
     rpmdev-setuptree
 COPY srpms rpmbuild/SRPMS
 COPY sources rpmbuild/SOURCES
+#RUN \
+#    cd ~/rpmbuild/SRPMS \
+#    && rpm -i *.src.rpm
 COPY specs rpmbuild/SPECS
-
 USER root:root
 RUN \
     --mount=type=cache,dst=/var/cache/dnf,id=dnf,sharing=locked \
@@ -20,11 +21,6 @@ RUN \
     && sudo dnf -y builddep *.spec
 
 USER builder:builder
-#RUN \
-#    cd ~/rpmbuild/SRPMS \
-#    && rpm -i *.src.rpm
-
-COPY specs rpmbuild/SPECS
 RUN \
     cd ~/rpmbuild/SPECS \
     && spectool -g -R *.spec \
