@@ -1,0 +1,7 @@
+[local-rpms]
+name=Local RPMs
+baseurl=file:///usr/share/local-rpm-repo
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0
+priority=75
