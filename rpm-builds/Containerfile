@@ -1,0 +1,35 @@
+FROM quay.io/fedora/fedora:rawhide as builder
+RUN \
+    --mount=type=cache,dst=/var/cache/dnf,id=dnf,sharing=locked \
+    dnf -y install fedora-packager rpmdevtools gcc bash \
+    && useradd -m builder
+
+#SHELL ["/bin/bash", "-c"]
+WORKDIR /home/builder
+USER builder:builder
+RUN \
+    rpmdev-setuptree
+COPY srpms rpmbuild/SRPMS
+COPY sources rpmbuild/SOURCES
+COPY specs rpmbuild/SPECS
+
+USER root:root
+RUN \
+    --mount=type=cache,dst=/var/cache/dnf,id=dnf,sharing=locked \
+    cd /home/builder/rpmbuild/SPECS \
+    && sudo dnf -y builddep *.spec
+
+USER builder:builder
+#RUN \
+#    cd ~/rpmbuild/SRPMS \
+#    && rpm -i *.src.rpm
+
+COPY specs rpmbuild/SPECS
+RUN \
+    cd ~/rpmbuild/SPECS \
+    && spectool -g -R *.spec \
+    && rpmbuild -ba *.spec \
+    && createrepo /home/builder/rpmbuild/RPMS/x86_64
+
+FROM scratch as repo
+COPY --from=builder /home/builder/rpmbuild/RPMS/x86_64 /

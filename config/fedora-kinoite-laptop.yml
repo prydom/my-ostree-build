@@ -16,6 +16,7 @@ modules:
       - etc/yum.repos.d: /etc/yum.repos.d
       - etc/pki: /etc/pki
       - etc/dracut.conf.d: /etc/dracut.conf.d
+      - rpms: /usr/share/local-rpm-repo
 
   # Secure Boot and initramfs
   - type: rpm-ostree
@@ -44,12 +45,20 @@ modules:
   # Package management
   - type: rpm-ostree
     install:
+      - createrepo_c
       - dnf5
 
+  - type: containerfile
+    containerfiles:
+      - copyrpms
+
+  # Generate yum/rpm repo for additional local packages
+  # AND
   # Forces the image to be in sync with mirrors before the larger package overlays
   # We do this again later on with a cache bust.
   - type: script
     snippets:
+      - createrepo /usr/share/local-rpm-repo
       - dnf5 '--exclude=kernel*' upgrade -y
 
   # Virtualization
@@ -163,7 +172,7 @@ modules:
     snippets:
       - dnf5 '--exclude=kernel*' upgrade -y
       # WORKAROUND: do last because my RPM depends on 1Password not ever being upgraded
-      - rpm-ostree install /tmp/config/rpms/1password-ostree-workaround-0.0.0_main-1.fc41.x86_64.rpm
+      - rpm-ostree install 1password-ostree-workaround
 
   # WORKAROUND: Put back /opt and merge /usr/etc into /etc
   - type: script
