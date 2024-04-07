@@ -150,7 +150,6 @@ modules:
       enabled:
         - libvirtd.service
         - systemd-timesyncd.service
-        - tailscaled-restart.service
         - tailscaled.service
         - ydotool.service
       disabled:
