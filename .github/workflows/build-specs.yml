@@ -1,8 +1,5 @@
 name: build-specs
 on:
-  push:
-    branches:
-      - create-repo
   workflow_dispatch: # allow manually triggering builds
 jobs:
   snapshot-rawhide:
