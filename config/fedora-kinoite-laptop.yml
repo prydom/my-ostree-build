@@ -60,6 +60,8 @@ modules:
     snippets:
       - createrepo /usr/share/local-rpm-repo
       - dnf5 '--exclude=kernel*' upgrade -y
+      # Create a target directory for nix to bind mount to
+      - mkdir -p -m 000 /nix
 
   # Virtualization
   - type: rpm-ostree
