@@ -11,11 +11,11 @@ image-version: rawhide-snapshot
 # you can include multiple instances of the same module
 modules:
   - type: script
-  snippets:
-    # WORKAROUND: for packages which deploy to /opt
-    # TODO: look at switching to ostree-state-overlay@opt.service
-    - rm /opt
-    - ln -s usr/lib/opt /opt
+    snippets:
+      # WORKAROUND: for packages which deploy to /opt
+      # TODO: look at switching to ostree-state-overlay@opt.service
+      - rm /opt
+      - ln -s usr/lib/opt /opt
 
   # copy only files needed by rpm and dracut
   - type: files
