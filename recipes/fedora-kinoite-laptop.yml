@@ -10,6 +10,13 @@ image-version: rawhide-snapshot
 # module configuration, executed in order
 # you can include multiple instances of the same module
 modules:
+  - type: script
+  snippets:
+    # WORKAROUND: for packages which deploy to /opt
+    # TODO: look at switching to ostree-state-overlay@opt.service
+    - rm /opt
+    - ln -s usr/lib/opt /opt
+
   # copy only files needed by rpm and dracut
   - type: files
     files:
@@ -33,14 +40,9 @@ modules:
       - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-headers kernel --experimental --from repo=fedora-40-kernel
       - rm -f /usr/lib/modules/*/initramfs.img
       - rmdir --ignore-fail-on-non-empty /usr/lib/modules/*
+      - rm -rf /boot
+      - mkdir -m 755 /boot
       - /tmp/config/scripts/regen-initramfs.sh
-
-  - type: script
-    snippets:
-      # WORKAROUND: for packages which deploy to /opt
-      # TODO: look at switching to ostree-state-overlay@opt.service
-      - mv /opt /opt.orig
-      - ln -s /usr/lib/opt /opt
 
   # Package management
   - type: rpm-ostree
@@ -151,6 +153,7 @@ modules:
         - tailscaled.service
         - ydotool.service
       disabled:
+        - dmraid-activation.service
       masked:
       unmasked:
     user:
@@ -177,5 +180,5 @@ modules:
   - type: script
     snippets:
       - rm /opt
-      - mv /opt.orig /opt
+      - ln -s var/opt /opt
       - cp -fal /usr/etc /
