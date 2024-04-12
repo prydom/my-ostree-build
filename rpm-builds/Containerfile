@@ -23,7 +23,7 @@ RUN \
 USER builder:builder
 RUN \
     cd ~/rpmbuild/SPECS \
-    && spectool -g -R *.spec \
+    && echo *.spec | xargs -n 1 -P 1 -- spectool -g -R \
     && rpmbuild -ba *.spec \
     && createrepo /home/builder/rpmbuild/RPMS/x86_64
 
