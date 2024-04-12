@@ -25,6 +25,10 @@ modules:
       - etc/dracut.conf.d: /etc/dracut.conf.d
       - rpms: /usr/share/local-rpm-repo
 
+  - type: containerfile
+    containerfiles:
+      - copyrpms
+
   # Secure Boot and initramfs
   - type: rpm-ostree
     install:
@@ -49,10 +53,6 @@ modules:
     install:
       - createrepo_c
       - dnf5
-
-  - type: containerfile
-    containerfiles:
-      - copyrpms
 
   # Generate yum/rpm repo for additional local packages
   # AND
