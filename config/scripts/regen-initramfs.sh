@@ -3,7 +3,7 @@ set -oue pipefail
 
 KVER="$(rpm -q kernel | sed -rn 's/^kernel-(.*)$/\1/p')"
 
-ls -1 /usr/lib/modules | grep -vZ "$KVER" \
+ls -1 /usr/lib/modules | grep -vZ "$KVER" | tr -d '\n' \
     | xargs -0 -- printf "/usr/lib/modules/%s\0" \
     | xargs -0 -- rm -rf
 
