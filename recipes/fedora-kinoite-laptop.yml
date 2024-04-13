@@ -43,8 +43,6 @@ modules:
     snippets:
       - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-headers kernel --experimental --from repo=fedora-40-kernel
       - rm -f /usr/lib/modules/*/initramfs.img
-      - rm -rf "/usr/lib/modules/$(rpm -q kernel | sed -rn 's/^kernel-(.*)$/\1/p')"
-      - rmdir --ignore-fail-on-non-empty /usr/lib/modules/*
       - /tmp/config/scripts/regen-initramfs.sh
       - rm -rf /boot
       - mkdir -m 755 /boot
