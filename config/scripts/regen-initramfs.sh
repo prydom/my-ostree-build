@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -oue pipefail
 
-KVER="$(rpm -q kernel | sed -rn 's/^kernel-(.*)$/\1/p')"
+KVER="$(rpm -q kernel-core --qf '%{version}-%{release}.%{arch}' | head -n1)"
 ls -1 --zero /usr/lib/modules | grep -vz "^$KVER$" \
     | sed -z 's/[[:space:]]*$//' \
     | xargs -r -0 -- printf "/usr/lib/modules/%s\0" \
