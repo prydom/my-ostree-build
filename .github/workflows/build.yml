@@ -47,7 +47,7 @@ jobs:
         image:
           - fedora-kinoite-laptop
     container:
-      image: quay.io/fedora-ostree-desktops/buildroot:rawhide
+      image: ghcr.io/prydom/ostree-buildroot:rawhide
       options: --privileged
     env:
       # TODO: use value from target-manifest to get branch name instead of assuming Rawhide
