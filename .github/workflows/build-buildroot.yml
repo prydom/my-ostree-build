@@ -1,0 +1,29 @@
+name: build-specs
+on:
+  schedule:
+    - cron: "00 13 * * *"
+  workflow_dispatch: # allow manually triggering builds
+jobs:
+  build-buildroot:
+    name: Build buildroot
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push rawhide buildroot
+        uses: docker/build-push-action@v5
+        with:
+          context: "{{defaultContext}}:buildroot"
+          file: "Containerfile.rawhide"
+          push: true
+          tags: ghcr.io/prydom/ostree-buildroot:rawhide

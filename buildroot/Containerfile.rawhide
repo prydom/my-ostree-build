@@ -1,0 +1,22 @@
+FROM quay.io/fedora/fedora:rawhide
+
+RUN dnf -y upgrade && \
+     dnf -y install \
+        buildah \
+        dbus-daemon \
+        distribution-gpg-keys \
+        file \
+        flatpak \
+        git-core \
+        jq \
+        just \
+        lorax \
+        ostree \
+        podman \
+        python3-pyyaml \
+        rpm-ostree \
+        selinux-policy-targeted \
+        skopeo \
+        tar \
+        zstd \
+    && dnf clean all
