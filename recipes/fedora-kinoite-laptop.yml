@@ -41,12 +41,9 @@ modules:
   # We use a stable kernel instead of the one from rawhide
   - type: script
     snippets:
+      # the cliwrap `kernel-install` script will delete old /usr/lib/modules directories and regenerate our initramfs for us
       - rpm-ostree cliwrap install-to-root /
       - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-headers kernel --experimental --from repo=fedora-40-kernel
-      #- rm -f /usr/lib/modules/*/initramfs.img
-      #- /tmp/config/scripts/regen-initramfs.sh
-      #- rm -rf /boot
-      #- mkdir -m 755 /boot
 
   # Package management
   - type: rpm-ostree
@@ -103,10 +100,13 @@ modules:
 
   - type: script
     snippets:
-      # WORKAROUND: Create the group for 1Password with the a consistent GID
+      # WORKAROUND: Create the groups for 1Password with consistent GIDs because they chown files to these IDs
       # Also, 1Password requires the GID to be > 1000
+      # Needed because the rpm scriptlet itself doesn't specify these parameters.
       - echo "onepassword:x:5001:" >> /usr/lib/group
       - echo "onepassword-cli:x:5002:" >> /usr/lib/group
+      - echo "g onepassword 5001" > /usr/lib/sysusers.d/onepassword.conf
+      - echo "g onepassword-cli 5002" >> /usr/lib/sysusers.d/onepassword.conf
 
   # Proprietary
   - type: rpm-ostree
@@ -182,17 +182,18 @@ modules:
 
   - type: script
     snippets:
-      # WORKAROUND: Ensure all accounts are moved to altfiles
-      - grep -Ev "(^root:)" /etc/passwd >> /usr/lib/passwd
-      - grep -Ev "(^root:)|(^wheel:)" /etc/group >> /usr/lib/group
+      # clear accounts so they uid/gids get assigned by sysusers.d
       - echo "root:x:0:0:root:/root:/bin/bash" > /etc/passwd
       - echo "root:x:0:" > /etc/group
       - echo "wheel:x:10:" >> /etc/group
-      #   Put back /opt and merge /usr/etc into /etc
+      # Put back /opt and create symlinks in /var
       - rm /opt
       - ln -s var/opt /opt
+      - echo "L /var/opt/google - - - - ../../usr/lib/opt/google" > /usr/lib/tmpfiles.d/var-symlinks.conf
+      - echo "L /var/opt/1Password - - - - ../../usr/lib/opt/1Password" >> /usr/lib/tmpfiles.d/var-symlinks.conf
+      # merge /usr/etc into /etc otherwise ostree tar import is not consistent
       - cp -fal /usr/etc /
-      # Also clear boot again
+      # Virtualization packages install files in /boot we don't want
       - rm -rf /boot
       - mkdir -m 755 /boot
       # rpm-ostree creates /40-rpmostree-pkg-usermod-qemu-kvm.conf for some reason
