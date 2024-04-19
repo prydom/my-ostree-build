@@ -1,7 +1,5 @@
 name: snapshot-rawhide
 on:
-  schedule:
-    - cron: "00 14 * * 1"
   workflow_dispatch: # allow manually triggering builds
 jobs:
   snapshot-rawhide:

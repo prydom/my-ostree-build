@@ -41,11 +41,12 @@ modules:
   # We use a stable kernel instead of the one from rawhide
   - type: script
     snippets:
+      - rpm-ostree cliwrap install-to-root /
       - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-headers kernel --experimental --from repo=fedora-40-kernel
-      - rm -f /usr/lib/modules/*/initramfs.img
-      - /tmp/config/scripts/regen-initramfs.sh
-      - rm -rf /boot
-      - mkdir -m 755 /boot
+      #- rm -f /usr/lib/modules/*/initramfs.img
+      #- /tmp/config/scripts/regen-initramfs.sh
+      #- rm -rf /boot
+      #- mkdir -m 755 /boot
 
   # Package management
   - type: rpm-ostree
@@ -60,7 +61,7 @@ modules:
   - type: script
     snippets:
       - createrepo /usr/share/local-rpm-repo
-      - dnf5 '--exclude=kernel*' upgrade -y
+      #- dnf5 '--exclude=kernel*' upgrade -y
 
   # Virtualization
   - type: rpm-ostree
@@ -104,8 +105,8 @@ modules:
     snippets:
       # WORKAROUND: Create the group for 1Password with the a consistent GID
       # Also, 1Password requires the GID to be > 1000
-      - groupadd -g 5001 "onepassword"
-      - groupadd -g 5002 "onepassword-cli"
+      - echo "onepassword:x:5001:" >> /usr/lib/group
+      - echo "onepassword-cli:x:5002:" >> /usr/lib/group
 
   # Proprietary
   - type: rpm-ostree
@@ -126,6 +127,7 @@ modules:
   # CLI Utils
   - type: rpm-ostree
     install:
+      - duperemove
       - htop
       - mosh
       - ncdu
@@ -164,20 +166,29 @@ modules:
   # BUST LAYER CACHE IF THERE ARE UPDATES
   # We still download packages from whatever repo is suggested by Fedora's metalink
   # But we trust UWaterloo to be somewhat quickly up to date.
-  - type: containerfile
-    snippets:
-      - ADD https://mirror.csclub.uwaterloo.ca/fedora/linux/development/rawhide/Everything/x86_64/os/repodata/repomd.xml /tmp/mirror-cache-bust
+  #- type: containerfile
+  #  snippets:
+  #    - ADD https://mirror.csclub.uwaterloo.ca/fedora/linux/development/rawhide/Everything/x86_64/os/repodata/repomd.xml /tmp/mirror-cache-bust
 
   # Upgrade all in one layer if there are any new packages
-  - type: script
-    snippets:
-      - dnf5 '--exclude=kernel*' upgrade -y
-      # WORKAROUND: do last because my RPM depends on 1Password not ever being upgraded
-      - rpm-ostree install 1password-ostree-workaround
+  #- type: script
+  #  snippets:
+  #    - dnf5 '--exclude=kernel*' upgrade -y
 
-  # WORKAROUND: Put back /opt and merge /usr/etc into /etc
+  - type: rpm-ostree
+    install:
+      # WORKAROUND: do last because my RPM depends on 1Password not ever being upgraded
+      - 1password-ostree-workaround
+
   - type: script
     snippets:
+      # WORKAROUND: Ensure all accounts are moved to altfiles
+      - grep -Ev "(^root:)" /etc/passwd >> /usr/lib/passwd
+      - grep -Ev "(^root:)|(^wheel:)" /etc/group >> /usr/lib/group
+      - echo "root:x:0:0:root:/root:/bin/bash" > /etc/passwd
+      - echo "root:x:0:" > /etc/group
+      - echo "wheel:x:10:" >> /etc/group
+      #   Put back /opt and merge /usr/etc into /etc
       - rm /opt
       - ln -s var/opt /opt
       - cp -fal /usr/etc /
