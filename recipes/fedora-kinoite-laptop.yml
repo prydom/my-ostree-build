@@ -50,6 +50,7 @@ modules:
     install:
       - createrepo_c
       - dnf5
+      - python3-libdnf5
 
   # Generate yum/rpm repo for additional local packages
   # AND
