@@ -23,6 +23,7 @@ modules:
       - etc/yum.repos.d: /etc/yum.repos.d
       - etc/pki: /etc/pki
       - etc/dracut.conf.d: /etc/dracut.conf.d
+      - usr/sbin: /usr/sbin
       - rpms: /usr/share/local-rpm-repo
 
   - type: containerfile
@@ -59,7 +60,7 @@ modules:
   - type: script
     snippets:
       - createrepo /usr/share/local-rpm-repo
-      #- dnf5 '--exclude=kernel*' upgrade -y
+      - ostree-dnf-upgrade.py --distrosync
 
   # Virtualization
   - type: rpm-ostree
@@ -117,6 +118,11 @@ modules:
       - google-chrome-stable
       - tailscale
 
+  - type: script
+    snippets:
+      - echo "L /var/opt/google - - - - ../../usr/lib/opt/google" > /usr/lib/tmpfiles.d/var-symlinks.conf
+      - echo "L /var/opt/1Password - - - - ../../usr/lib/opt/1Password" >> /usr/lib/tmpfiles.d/var-symlinks.conf
+
   # Development
   - type: rpm-ostree
     install:
@@ -167,14 +173,14 @@ modules:
   # BUST LAYER CACHE IF THERE ARE UPDATES
   # We still download packages from whatever repo is suggested by Fedora's metalink
   # But we trust UWaterloo to be somewhat quickly up to date.
-  #- type: containerfile
-  #  snippets:
-  #    - ADD https://mirror.csclub.uwaterloo.ca/fedora/linux/development/rawhide/Everything/x86_64/os/repodata/repomd.xml /tmp/mirror-cache-bust
+  - type: containerfile
+    snippets:
+      - ADD https://mirror.csclub.uwaterloo.ca/fedora/linux/development/rawhide/Everything/x86_64/os/repodata/repomd.xml /tmp/mirror-cache-bust
 
   # Upgrade all in one layer if there are any new packages
-  #- type: script
-  #  snippets:
-  #    - dnf5 '--exclude=kernel*' upgrade -y
+  - type: script
+    snippets:
+      - ostree-dnf-upgrade.py
 
   - type: rpm-ostree
     install:
@@ -190,8 +196,6 @@ modules:
       # Put back /opt and create symlinks in /var
       - rm /opt
       - ln -s var/opt /opt
-      - echo "L /var/opt/google - - - - ../../usr/lib/opt/google" > /usr/lib/tmpfiles.d/var-symlinks.conf
-      - echo "L /var/opt/1Password - - - - ../../usr/lib/opt/1Password" >> /usr/lib/tmpfiles.d/var-symlinks.conf
       # merge /usr/etc into /etc otherwise ostree tar import is not consistent
       - cp -fal /usr/etc /
       # Virtualization packages install files in /boot we don't want
