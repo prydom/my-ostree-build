@@ -1,4 +1,4 @@
-name: build-specs
+name: build-buildroot
 on:
   schedule:
     - cron: "00 13 * * *"
