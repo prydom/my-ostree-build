@@ -115,6 +115,7 @@ modules:
     install:
       - 1password
       - 1password-cli
+      - 1password-ostree-workaround
       - google-chrome-stable
       - tailscale
 
@@ -182,18 +183,13 @@ modules:
     snippets:
       - ostree-dnf-upgrade.py
 
-  - type: rpm-ostree
-    install:
-      # WORKAROUND: do last because my RPM depends on 1Password not ever being upgraded
-      - 1password-ostree-workaround
-
   - type: script
     snippets:
       # clear accounts so they uid/gids get assigned by sysusers.d
       - echo "root:x:0:0:root:/root:/bin/bash" > /etc/passwd
       - echo "root:x:0:" > /etc/group
       - echo "wheel:x:10:" >> /etc/group
-      # Put back /opt and create symlinks in /var
+      # Put back /opt
       - rm /opt
       - ln -s var/opt /opt
       # merge /usr/etc into /etc otherwise ostree tar import is not consistent

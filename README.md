@@ -6,7 +6,7 @@
 This repo uses BlueBuild to generate a Containerfile (Dockerfile) from yaml recipes.
 Install BlueBuild and its dependencies using instructions from [BlueBuild CLI](https://github.com/blue-build/cli).
 
-Use `bluebuild template -o Containerfile config/fedora-kinoite-laptop.yml` to generate the Containerfile and inspect what will be built.
+Use `bluebuild template -o Containerfile recipes/fedora-kinoite-laptop.yml` to generate the Containerfile and inspect what will be built.
 
 Use `bluebuild build config/fedora-kinoite-laptop.yml` or `podman build --format docker --pull -t oci-archive:./fedora-kinoite-laptop.tar .` to locally build the image. Note that the former command will save the image to your local container manager storage, while the latter command will save the container to a tar file. If you are building with a rootless container manager, it is recommended you use the second method.
 

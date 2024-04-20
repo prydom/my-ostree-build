@@ -9,6 +9,7 @@ import tempfile
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--distrosync', default=False, action='store_true')
+parser.add_argument('--fail-if-no-upgrades', default=False, action='store_true')
 args = parser.parse_args()
 
 base = libdnf5.base.Base()
@@ -31,8 +32,10 @@ with tempfile.TemporaryDirectory(prefix='rpms_') as td:
         goal.add_upgrade("*")
 
     transaction = goal.resolve()
-    if transaction.get_transaction_packages_count() == 0:
-        sys.exit(0)
+    count = transaction.get_transaction_packages_count()
+    print(f"Number of package changes in transaction: {count}")
+    if count == 0:
+        sys.exit(0 if not args.fail_if_no_upgrades else 1)
 
     transaction.download()
     packages = glob.glob(td + '/*.rpm')
