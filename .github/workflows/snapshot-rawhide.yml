@@ -32,6 +32,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
         id: build-and-push
+        continue-on-error: true # This failing will usually just mean there were no updates
         uses: docker/build-push-action@v5
         with:
           context: "{{defaultContext}}:recipes"
@@ -39,9 +40,13 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.actor }}/${{ matrix.image }}:snapshot
       - name: Sign with cosign
+        if: ${{ steps.build-and-push.outcome == 'success' }}
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         shell: bash
         run: |
           cosign sign --key=env://COSIGN_PRIVATE_KEY --recursive "ghcr.io/${{ github.actor }}/${{ matrix.image }}@$DIGEST"
+      - name: Pass job
+        shell: bash
+        run: /usr/bin/true
