@@ -1,4 +1,4 @@
-name: build-specs
+name: 03 - Build RPM specs and SRPMs
 on:
   workflow_dispatch: # allow manually triggering builds
 jobs:

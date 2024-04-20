@@ -1,4 +1,4 @@
-name: my-ostree-build
+name: 00 - Do full overlay builds
 on:
   schedule:
     - cron: "00 15 * * 6"

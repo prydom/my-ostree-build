@@ -1,4 +1,4 @@
-name: build-buildroot
+name: 04 - Build buildroot container (Rawhide)
 on:
   schedule:
     - cron: "00 13 * * *"
