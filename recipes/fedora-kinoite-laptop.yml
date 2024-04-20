@@ -115,6 +115,7 @@ modules:
     install:
       - 1password
       - 1password-cli
+      - 1password-ostree-workaround
       - google-chrome-stable
       - tailscale
 
@@ -181,11 +182,6 @@ modules:
   - type: script
     snippets:
       - ostree-dnf-upgrade.py
-
-  - type: rpm-ostree
-    install:
-      # WORKAROUND: do last because my RPM depends on 1Password not ever being upgraded
-      - 1password-ostree-workaround
 
   - type: script
     snippets:
