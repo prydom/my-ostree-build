@@ -5,7 +5,7 @@ on:
   workflow_dispatch: # allow manually triggering builds
 jobs:
   snapshot-upgrades:
-    name: Build Custom Image
+    name: Run package upgrades on snapshot tag
     runs-on: ubuntu-latest
     permissions:
       contents: read
