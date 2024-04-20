@@ -193,7 +193,7 @@ modules:
       - echo "root:x:0:0:root:/root:/bin/bash" > /etc/passwd
       - echo "root:x:0:" > /etc/group
       - echo "wheel:x:10:" >> /etc/group
-      # Put back /opt and create symlinks in /var
+      # Put back /opt
       - rm /opt
       - ln -s var/opt /opt
       # merge /usr/etc into /etc otherwise ostree tar import is not consistent

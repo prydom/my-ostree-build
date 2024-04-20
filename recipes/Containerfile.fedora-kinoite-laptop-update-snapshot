@@ -1,0 +1,37 @@
+FROM ghcr.io/prydom/fedora-kinoite-laptop:snapshot
+
+LABEL org.opencontainers.image.title="fedora-kinoite-laptop"
+LABEL org.opencontainers.image.description="Upgrade snapshot of fedora-kinoite-laptop rebuilt at least weekly"
+
+# Module RUNs
+RUN \
+  --mount=type=tmpfs,target=/var \
+  --mount=type=cache,dst=/var/cache/rpm-ostree,id=rpm-ostree-cache-fedora-kinoite-laptop-snapshot,sharing=locked \
+  echo "========== Start Upgrade ==========" \
+    # Swap opt symlink
+    && rm /opt \
+    && ln -s usr/lib/opt /opt \
+    # WORKAROUND: Remove 1password hook in case it gets upgraded
+    && rpm-ostree override remove 1password-ostree-workaround \
+    # Upgrade image - fail the pipeline if there no upgrades
+    && ostree-dnf-upgrade.py --fail-if-no-upgrades \
+    # WORKAROUND: do last because my RPM depends on 1Password not ever being upgraded
+    && rpm-ostree install 1password-ostree-workaround \
+    # clear accounts so they uid/gids get assigned by sysusers.d
+    && echo "root:x:0:0:root:/root:/bin/bash" > /etc/passwd \
+    && echo "root:x:0:" > /etc/group \
+    && echo "wheel:x:10:" >> /etc/group \
+    # Put back /opt
+    && rm /opt \
+    && ln -s var/opt /opt \
+    # merge /usr/etc into /etc otherwise ostree tar import is not consistent
+    && mkdir -p /usr/etc \
+    && cp -fal /usr/etc / \
+    # Virtualization packages install files in /boot we don't want
+    && rm -rf /boot \
+    && mkdir -m 755 /boot \
+    # rpm-ostree creates /40-rpmostree-pkg-usermod-qemu-kvm.conf for some reason
+    # a similar file exists in /usr/lib/sysusers.d so just delete it
+    && rm /*.conf \
+  && echo "========== End Upgrade ==========" \
+  && ostree container commit
