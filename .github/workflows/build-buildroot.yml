@@ -1,7 +1,7 @@
 name: 03 - Build buildroot container (Rawhide)
 on:
   schedule:
-    - cron: "00 13 * * *"
+    - cron: "00 14 * * *"
   workflow_dispatch: # allow manually triggering builds
 jobs:
   build-buildroot:
