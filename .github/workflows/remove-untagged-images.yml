@@ -1,7 +1,5 @@
 name: 04 - Clean untagged images
 on:
-  schedule:
-    - cron: "10 04 * * *"
   workflow_dispatch: # allow manually triggering builds
 jobs:
   clean-untagged-images:
@@ -15,7 +13,7 @@ jobs:
       fail-fast: false # stop GH from cancelling all matrix builds if one fails
       matrix:
         image:
-          - fedora-kinoite-laptop
+          #- fedora-kinoite-laptop
           - ostree-buildroot
     steps:
       - uses: actions/delete-package-versions@v5
