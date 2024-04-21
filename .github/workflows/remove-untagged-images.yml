@@ -22,4 +22,5 @@ jobs:
         with:
           package-name: ${{ matrix.image }}
           package-type: 'container'
+          min-versions-to-keep: 35
           delete-only-untagged-versions: 'true'
