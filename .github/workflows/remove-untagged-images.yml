@@ -1,7 +1,7 @@
 name: 04 - Clean untagged images
 on:
   schedule:
-    - cron: "00 04 * * *"
+    - cron: "10 04 * * *"
   workflow_dispatch: # allow manually triggering builds
 jobs:
   clean-untagged-images:

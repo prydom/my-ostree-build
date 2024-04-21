@@ -1,12 +1,16 @@
 name: 00 - Do full overlay builds
 on:
   schedule:
-    - cron: "00 15 * * 6"
+    - cron: "12 15 * * 6"
   push:
     branches:
       - main
-    paths-ignore: # don't rebuild if only documentation has changed
-      - "**.md"
+    paths-ignore:
+      - "README.md"
+      - ".gitignore"
+      - ".github/**"
+      - "rpm-builds/**"
+      - "buildroot/**"
   workflow_dispatch: # allow manually triggering builds
 jobs:
   my-ostree-build:
