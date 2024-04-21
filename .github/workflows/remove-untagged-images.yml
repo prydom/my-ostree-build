@@ -1,0 +1,25 @@
+name: 04 - Clean untagged images
+on:
+  schedule:
+    - cron: "00 04 * * *"
+  workflow_dispatch: # allow manually triggering builds
+jobs:
+  clean-untagged-images:
+    name: Clean untagged images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    strategy:
+      fail-fast: false # stop GH from cancelling all matrix builds if one fails
+      matrix:
+        image:
+          - fedora-kinoite-laptop
+          - ostree-buildroot
+    steps:
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ matrix.image }}
+          package-type: 'container'
+          delete-only-untagged-versions: 'true'
