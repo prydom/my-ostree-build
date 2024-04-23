@@ -89,6 +89,7 @@ modules:
       - gstreamer1-vaapi
       - mesa-va-drivers-freeworld
       - mesa-vdpau-drivers-freeworld
+      - openh264
     remove:
       # Replace with freeworld packages from rpmfusion
       - libavfilter-free
@@ -99,6 +100,7 @@ modules:
       - libswscale-free
       - libavcodec-free
       - mesa-va-drivers
+      - noopenh264
 
   - type: script
     snippets:

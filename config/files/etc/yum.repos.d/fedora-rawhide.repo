@@ -21,8 +21,8 @@
 
 [rawhide]
 name=Fedora - Rawhide - Developmental packages for the next Fedora release
-#baseurl=http://download.example/pub/fedora/linux/development/rawhide//Everything/$basearch/os/
-metalink=https://mirrors.fedoraproject.org/metalink?repo=rawhide&arch=$basearch
+baseurl=https://download-ib01.fedoraproject.org/pub/fedora/linux/development/rawhide/Everything/$basearch/os/
+#metalink=https://mirrors.fedoraproject.org/metalink?repo=rawhide&arch=$basearch
 enabled=1
 countme=1
 metadata_expire=6h
