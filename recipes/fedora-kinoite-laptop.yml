@@ -53,6 +53,15 @@ modules:
       - dnf5
       - python3-libdnf5
 
+  # We want to use openh264 if it's asked for
+  # WORKAROUND: We need to do this before the distro-sync below
+  #             because my distro-sync doesn't process obsoletes
+  - type: rpm-ostree
+    install:
+      - openh264
+    remove:
+      - noopenh264
+
   # Generate yum/rpm repo for additional local packages
   # AND
   # Forces the image to be in sync with mirrors before the larger package overlays
@@ -89,7 +98,6 @@ modules:
       - gstreamer1-vaapi
       - mesa-va-drivers-freeworld
       - mesa-vdpau-drivers-freeworld
-      - openh264
     remove:
       # Replace with freeworld packages from rpmfusion
       - libavfilter-free
@@ -100,7 +108,6 @@ modules:
       - libswscale-free
       - libavcodec-free
       - mesa-va-drivers
-      - noopenh264
 
   - type: script
     snippets:
