@@ -19,6 +19,9 @@ config = base.get_config()
 with tempfile.TemporaryDirectory(prefix='rpms_') as td:
     config.destdir = td
     config.excludepkgs = ['kernel*']
+    # HACK: remove systemd and shadow-utils from this list
+    #       once https://github.com/coreos/rpm-ostree/issues/4938 is resolved
+    config.excludepkgs += ['systemd*', 'shadow-utils*']
     base.setup()
 
     repo_sack = base.get_repo_sack()
