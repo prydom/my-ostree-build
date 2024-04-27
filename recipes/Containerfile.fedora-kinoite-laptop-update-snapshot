@@ -6,13 +6,17 @@ LABEL org.opencontainers.image.description="Upgrade snapshot of fedora-kinoite-l
 # Module RUNs
 RUN \
   --mount=type=tmpfs,target=/var \
+  --mount=type=bind,from=ghcr.io/prydom/fedora-kinoite-laptop-rpms,src=/,dst=/tmp/rpms \
   --mount=type=cache,dst=/var/cache/rpm-ostree,id=rpm-ostree-cache-fedora-kinoite-laptop-snapshot,sharing=locked \
   echo "========== Start Upgrade ==========" \
     # Swap opt symlink
     && rm /opt \
     && ln -s usr/lib/opt /opt \
+    # copy in my RPMs
+    && cp -r /tmp/rpms/* /usr/share/local-rpm-repo \
+    && createrepo /usr/share/local-rpm-repo \
     # Upgrade image - fail the pipeline if there no upgrades
-    && ostree-dnf-upgrade.py --fail-if-no-upgrades \
+    && python3 -u /usr/sbin/ostree-dnf-upgrade.py --fail-if-no-upgrades \
     # clear accounts so they uid/gids get assigned by sysusers.d
     && echo "root:x:0:0:root:/root:/bin/bash" > /etc/passwd \
     && echo "root:x:0:" > /etc/group \
