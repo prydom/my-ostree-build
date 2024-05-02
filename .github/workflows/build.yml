@@ -90,6 +90,25 @@ jobs:
         shell: bash
         run: |
           ostree container image pull repo ostree-unverified-image:docker://ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG
+      - name: Checkout image and recommit to re-label
+        shell: bash
+        run: |
+          set -x
+          export REF="$(ostree refs --repo=repo ostree/container/image)"
+
+          ostree checkout --repo=repo \
+            --require-hardlinks \
+            "ostree/container/image/$REF" checkout
+
+          mkdir -p checkout/nix
+
+          ostree commit \
+            "--branch=relabeled" \
+            --repo=repo \
+            --bootable \
+            --consume \
+            "--selinux-policy=$PWD/checkout" \
+            checkout
       - name: Re-encapsulate image
         id: re-encapsulate
         shell: bash
@@ -101,7 +120,6 @@ jobs:
             PREVIOUS_BUILD_MANIFEST+=("--previous-build-manifest=previous-manifest.json")
           fi
 
-          export REF=$(ostree refs --repo=repo ostree/container/image)
           rpm-ostree compose container-encapsulate --repo=repo \
             --cmd="/usr/bin/bash" \
             --label="containers.bootc=1" \
@@ -110,7 +128,7 @@ jobs:
             --label="org.opencontainers.image.title=${{ matrix.image }}" \
             --label="org.opencontainers.image.version=${{ steps.target-manifest.outputs.CONTAINER_IMAGE_VERSION }}" \
             "${PREVIOUS_BUILD_MANIFEST[@]}" \
-            ostree/container/image/$REF registry:ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG-rechunked | tee compose.out
+            relabeled registry:ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG-rechunked | tee compose.out
           export DIGEST=$(tail -n1 compose.out | grep -Eo 'sha256:[A-Fa-f0-9]+$')
           echo "DIGEST=$DIGEST" >> "$GITHUB_OUTPUT"
       - name: Sign image with cosign
