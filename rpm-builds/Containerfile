@@ -25,7 +25,9 @@ RUN \
     cd ~/rpmbuild/SPECS \
     && echo *.spec | xargs -n 1 -P 1 -- spectool -g -R \
     && rpmbuild -ba *.spec \
-    && createrepo /home/builder/rpmbuild/RPMS/x86_64
+    && mkdir -p /home/builder/rpmbuild/RPMS/noarch /home/builder/rpmbuild/RPMS/repo \
+    && cp -a /home/builder/rpmbuild/RPMS/x86_64/* /home/builder/rpmbuild/RPMS/noarch/* /home/builder/rpmbuild/RPMS/repo \
+    && createrepo /home/builder/rpmbuild/RPMS/repo
 
 FROM scratch as repo
-COPY --from=builder /home/builder/rpmbuild/RPMS/x86_64 /
+COPY --from=builder /home/builder/rpmbuild/RPMS/repo /
