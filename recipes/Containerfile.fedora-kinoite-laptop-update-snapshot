@@ -13,6 +13,7 @@ RUN \
     && rm /opt \
     && ln -s usr/lib/opt /opt \
     # copy in my RPMs
+    && rm -rf /usr/share/local-rpm-repo/* \
     && cp -r /tmp/rpms/* /usr/share/local-rpm-repo \
     && createrepo /usr/share/local-rpm-repo \
     # Upgrade image - fail the pipeline if there no upgrades
