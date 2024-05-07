@@ -3,41 +3,41 @@
 algorithms and decoding only VC1 algorithm.
 %ifnarch s390x
 %global with_hardware 1
-%global with_vulkan_hw 0
+#%%global with_vulkan_hw 0
 %global with_vdpau 1
 %global with_va 1
 %if !0%{?rhel}
-%global with_nine 0
-%global with_nvk 0
-%global with_omx 0
-%global with_opencl 0
+#%%global with_nine 0
+#%%global with_nvk 0
+#%%global with_omx 0
+#%%global with_opencl 0
 %endif
 #%%global base_vulkan ,amd
 %endif
 
 %ifarch %{ix86} x86_64
-%global with_crocus 0
-%global with_i915   0
+#%%global with_crocus 0
+#%%global with_i915   0
 %if !0%{?rhel}
-%global with_intel_clc 0
+#%%global with_intel_clc 0
 %endif
-%global with_iris   0
-%global with_xa     0
+#%%global with_iris   0
+#%%global with_xa     0
 #%%global intel_platform_vulkan ,intel,intel_hasvk
 %endif
 
 %ifarch aarch64 x86_64 %{ix86}
 %if !0%{?rhel}
-%global with_lima      0
-%global with_vc4       0
+#%%global with_lima      0
+#%%global with_vc4       0
 %endif
-%global with_etnaviv   0
-%global with_freedreno 0
-%global with_kmsro     0
-%global with_panfrost  0
-%global with_tegra     0
-%global with_v3d       0
-%global with_xa        0
+#%%global with_etnaviv   0
+#%%global with_freedreno 0
+#%%global with_kmsro     0
+#%%global with_panfrost  0
+#%%global with_tegra     0
+#%%global with_v3d       0
+#%%global with_xa        0
 #%%global extra_platform_vulkan ,broadcom,freedreno,panfrost,imagination-experimental
 %endif
 
@@ -65,7 +65,7 @@ algorithms and decoding only VC1 algorithm.
 
 Name:           %{srcname}-freeworld
 Summary:        Mesa graphics libraries
-%global ver 24.0.6
+%global ver 24.1.0-rc2
 Version:        %{lua:ver = string.gsub(rpm.expand("%{ver}"), "-", "~"); print(ver)}
 Release:        1%{?dist}
 License:        MIT
@@ -210,11 +210,11 @@ export RUSTFLAGS="%build_rustflags"
   -Dgallium-drivers=swrast,virgl \
 %endif
   -Dgallium-vdpau=%{?with_vdpau:enabled}%{!?with_vdpau:disabled} \
-  -Dgallium-omx=%{!?with_omx:bellagio}%{?with_omx:disabled} \
+  -Dgallium-omx=%{?with_omx:bellagio}%{!?with_omx:disabled} \
   -Dgallium-va=%{?with_va:enabled}%{!?with_va:disabled} \
-  -Dgallium-xa=%{!?with_xa:enabled}%{?with_xa:disabled} \
-  -Dgallium-nine=%{!?with_nine:true}%{?with_nine:false} \
-  -Dgallium-opencl=%{!?with_opencl:icd}%{?with_opencl:disabled} \
+  -Dgallium-xa=%{?with_xa:enabled}%{!?with_xa:disabled} \
+  -Dgallium-nine=%{?with_nine:true}%{!?with_nine:false} \
+  -Dgallium-opencl=%{?with_opencl:icd}%{!?with_opencl:disabled} \
 %if 0%{?with_opencl}
   -Dgallium-rusticl=true \
 %endif
@@ -325,6 +325,9 @@ rm -fr %{buildroot}%{_libdir}/libVkLayer_MESA_device_select.so
 %endif
 
 %changelog
+* Thu Apr 25 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.0.6-1
+- Update to 24.0.6
+
 * Thu Apr 11 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.0.5-1
 - Update to 24.0.5
 
