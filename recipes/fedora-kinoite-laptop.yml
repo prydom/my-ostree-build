@@ -107,6 +107,8 @@ modules:
       - libavutil-free
       - libswscale-free
       - libavcodec-free
+      - libavdevice-free
+      - ffmpeg-free
       - mesa-va-drivers
 
   - type: script
