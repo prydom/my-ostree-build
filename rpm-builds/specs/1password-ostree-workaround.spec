@@ -1,6 +1,6 @@
 Name:           1password-ostree-workaround
 Version:        0.0.1_main
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        HACK: patch 1Password to avoid quit on rpm-ostree invocation
 
 License: MIT
@@ -33,19 +33,15 @@ We do this by creating a shared object file which when loaded into the binary wi
 %make_install
 
 %post
-if [ ! -f /opt/1Password/1password.orig ]; then
-    cp /opt/1Password/1password /opt/1Password/1password.orig
-    patchelf --add-needed 1p-ldpreload.so /opt/1Password/1password
-fi
+patchelf --remove-needed 1p-ldpreload.so /opt/1Password/1password
+patchelf --add-needed 1p-ldpreload.so /opt/1Password/1password
 
 %triggerin -- 1password
-cp /opt/1Password/1password /opt/1Password/1password.orig
+patchelf --remove-needed 1p-ldpreload.so /opt/1Password/1password
 patchelf --add-needed 1p-ldpreload.so /opt/1Password/1password
 
 %postun
-if [ -f /opt/1Password/1password.orig ]; then
-    mv /opt/1Password/1password.orig /opt/1Password/1password
-fi
+patchelf --remove-needed 1p-ldpreload.so /opt/1Password/1password
 
 %files
 /opt/1Password/1p-ldpreload.so
