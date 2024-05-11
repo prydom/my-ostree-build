@@ -100,7 +100,7 @@ jobs:
             --require-hardlinks \
             "ostree/container/image/$REF" checkout
 
-          mkdir -p checkout/nix; chattr +i checkout/nix
+          mkdir -m 000 -p checkout/nix
 
           ostree commit \
             "--branch=relabeled" \
