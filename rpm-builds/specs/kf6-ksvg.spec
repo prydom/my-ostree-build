@@ -2,7 +2,7 @@
 
 Name:    kf6-ksvg
 Summary: Components for handling SVGs
-Version: 6.2.0
+Version: 6.3.0
 Release: 1_jxpryde%{?dist}
 
 License: CC0-1.0 AND GPL-2.0-or-later AND LGPL-2.0-or-later
@@ -69,8 +69,11 @@ Developer Documentation files for %{name} for use with KDevelop or QtCreator.
 %{_qt6_docdir}/*.qch
 
 %changelog
-* Sat May 04 2024 Jordan Pryde <jordan@pryde.me> - 6.2.0-1_jxpryde
+* Sat Jun 08 2024 Jordan Pryde <jordan@pryde.me> - 6.3.0-1_jxpryde
 - Patch out "findInCache with a lastModified timestamp of 0 is deprecated"
+
+* Sat Jun 01 2024 Marc Deop i Argemí <marcdeop@fedoraproject.org> - 6.3.0-1
+- 6.3.0
 
 * Sat May 04 2024 Marc Deop i Argemí <marcdeop@fedoraproject.org> - 6.2.0-1
 - 6.2.0
