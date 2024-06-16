@@ -1,7 +1,7 @@
 [fedora-40-kernel]
 name=Fedora 40 - $basearch
 #baseurl=http://download.example/pub/fedora/linux/releases/40/Everything/$basearch/os/
-metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-40&arch=$basearch
+metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f40&arch=$basearch
 enabled=1
 countme=1
 metadata_expire=6h
@@ -16,7 +16,7 @@ skip_if_unavailable=False
 [fedora-40-kernel-debuginfo]
 name=Fedora 40 - $basearch - Debug
 #baseurl=http://download.example/pub/fedora/linux/releases/40/Everything/$basearch/debug/tree/
-metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-debug-40&arch=$basearch
+metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-debug-f40&arch=$basearch
 enabled=0
 metadata_expire=6h
 repo_gpgcheck=0
@@ -30,7 +30,7 @@ skip_if_unavailable=False
 [fedora-40-kernel-source]
 name=Fedora 40 - Source
 #baseurl=http://download.example/pub/fedora/linux/releases/40/Everything/source/tree/
-metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-source-40&arch=$basearch
+metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-source-f40&arch=$basearch
 enabled=0
 metadata_expire=6h
 repo_gpgcheck=0
