@@ -44,7 +44,7 @@ modules:
     snippets:
       # the cliwrap `kernel-install` script will delete old /usr/lib/modules directories and regenerate our initramfs for us
       - rpm-ostree cliwrap install-to-root /
-      - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-headers kernel --experimental --from repo=fedora-40-kernel
+      - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel --experimental --from repo=fedora-40-kernel-updates
 
   # Package management
   - type: rpm-ostree
