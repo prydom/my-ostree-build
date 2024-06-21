@@ -131,9 +131,28 @@ jobs:
         shell: bash
         run: |
           cosign sign --key=env://COSIGN_PRIVATE_KEY --recursive "ghcr.io/${{ github.actor }}/${{ matrix.image }}@$DIGEST"
+      - name: Delete ostree repo
+        shell: bash
+        run: |
+          rm -rf repo
+      - name: Recompress image with zstd:chunked
+        id: re-compress
+        shell: bash
+        run: |
+          podman pull ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG-rechunked
+          podman tag ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG-rechunked ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG-recompressed
+          podman push --compress --force-compression --compression-format zstd:chunked --digestfile recompress.digest ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG-recompressed
+          echo "DIGEST=$(cat recompress.digest)" >> "$GITHUB_OUTPUT"
+      - name: Sign (recompressed) image with cosign
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
+          DIGEST: ${{ steps.re-compress.outputs.DIGEST }}
+        shell: bash
+        run: |
+          cosign sign --key=env://COSIGN_PRIVATE_KEY --recursive "ghcr.io/${{ github.actor }}/${{ matrix.image }}@$DIGEST"
       - name: Replace snapshot tag (if on default branch)
         env:
-          DIGEST: ${{ steps.re-encapsulate.outputs.DIGEST }}
+          DIGEST: ${{ steps.re-compress.outputs.DIGEST }}
         shell: bash
         if: ${{ github.ref_name == github.event.repository.default_branch }}
         run: |
