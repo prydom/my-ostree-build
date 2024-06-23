@@ -135,13 +135,15 @@ jobs:
         shell: bash
         run: |
           rm -rf repo
-      - name: Recompress image with zstd:chunked
+      - name: Recompress image with zstd
         id: re-compress
         shell: bash
         run: |
-          podman pull ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG-rechunked
-          podman tag ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG-rechunked ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG-recompressed
-          podman push --compress --force-compression --compression-format zstd:chunked --digestfile recompress.digest ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG-recompressed
+          mkdir ostree-image
+          skopeo copy --dest-compress --dest-compress-format zstd --remove-signatures \
+            docker://ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG-rechunked dir:ostree-image
+          skopeo copy --preserve-digests --digestfile recompress.digest \
+            dir:ostree-image docker://ghcr.io/${{ github.actor }}/${{ matrix.image }}:$RECHUNK_TARGET_TAG-recompressed
           echo "DIGEST=$(cat recompress.digest)" >> "$GITHUB_OUTPUT"
       - name: Sign (recompressed) image with cosign
         env:
