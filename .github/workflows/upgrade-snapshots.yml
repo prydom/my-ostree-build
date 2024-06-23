@@ -39,13 +39,11 @@ jobs:
         shell: bash
         run: |
           cd recipes
-          df -h
           podman pull ghcr.io/${{ github.actor }}/${{ matrix.image }}:snapshot
-          podman run --rm ghcr.io/${{ github.actor }}/${{ matrix.image }}:snapshot /bin/true
           df -h
           podman build --format=docker -t ghcr.io/${{ github.actor }}/${{ matrix.image }}:snapshot --file ${{ format('Containerfile.{0}-update-snapshot', matrix.image) }}
-          podman push --compress --force-compression --compression-format zstd:chunked --digestfile recompress.digest ghcr.io/${{ github.actor }}/${{ matrix.image }}:snapshot
-          echo "DIGEST=$(cat recompress.digest)" >> "$GITHUB_OUTPUT"
+          podman push --digestfile digest ghcr.io/${{ github.actor }}/${{ matrix.image }}:snapshot
+          echo "DIGEST=$(cat digest)" >> "$GITHUB_OUTPUT"
       - name: Sign with cosign
         if: ${{ steps.build-and-push.outcome == 'success' }}
         env:
