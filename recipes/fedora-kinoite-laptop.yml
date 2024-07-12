@@ -142,6 +142,8 @@ modules:
       - distrobox
       - kate
       - patchelf
+      - setroubleshoot
+      - strace
 
   # CLI Utils
   - type: rpm-ostree
