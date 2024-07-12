@@ -25,11 +25,11 @@ jobs:
         run: |
           mkdir -p /etc/containers
           echo '{}' > /etc/containers/auth.json
-          ln -s /etc/containers/auth.json /etc/ostree/auth.json
+          ln -sr /etc/containers/auth.json /etc/ostree/auth.json
           mkdir -p ~/.config/containers
-          ln -s /etc/containers/auth.json ~/.config/containers/auth.json
+          ln -sr /etc/containers/auth.json ~/.config/containers/auth.json
           mkdir -p ~/.docker
-          ln -s /etc/containers/auth.json ~/.docker/config.json
+          ln -sr /etc/containers/auth.json ~/.docker/config.json
           buildah login ghcr.io --authfile /etc/containers/auth.json -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout repo
         uses: actions/checkout@v4
