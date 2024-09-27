@@ -29,8 +29,10 @@ jobs:
           # !! Add your recipes here
           - fedora-kinoite-laptop.yml
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
       - name: Build Custom Image
-        uses: prydom/bluebuild-github-action@enable-docker-container-driver
+        uses: ./.github/actions/bluebuild
         with:
           recipe: ${{ matrix.recipe }}
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
