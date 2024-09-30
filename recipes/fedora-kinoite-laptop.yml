@@ -20,11 +20,16 @@ modules:
   # copy only files needed by rpm and dracut
   - type: files
     files:
-      - etc/yum.repos.d: /etc/yum.repos.d
-      - etc/pki: /etc/pki
-      - etc/dracut.conf.d: /etc/dracut.conf.d
-      - usr/sbin: /usr/sbin
-      - rpms: /usr/share/local-rpm-repo
+      - source: system/etc/yum.repos.d
+        destination: /etc/yum.repos.d
+      - source: system/etc/pki
+        destination: /etc/pki
+      - source: system/etc/dracut.conf.d
+        destination: /etc/dracut.conf.d
+      - source: system/usr/sbin
+        destination: /usr/sbin
+      - source: system/rpms
+        destination: /usr/share/local-rpm-repo
 
   - type: containerfile
     containerfiles:
@@ -164,8 +169,10 @@ modules:
   # copy rest of customizations
   - type: files
     files:
-      - usr: /usr
-      - etc: /etc
+      - source: system/usr
+        destination: /usr
+      - source: system/etc
+        destination: /etc
 
   - type: systemd
     system:
