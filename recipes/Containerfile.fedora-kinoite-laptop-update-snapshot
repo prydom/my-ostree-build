@@ -17,6 +17,7 @@ RUN \
     && cp -r /tmp/rpms/* /usr/share/local-rpm-repo \
     && createrepo /usr/share/local-rpm-repo \
     # Upgrade image - fail the pipeline if there no upgrades
+    && ostree-dnf-upgrade.py --distrosync \
     && python3 -u /usr/sbin/ostree-dnf-upgrade.py --fail-if-no-upgrades \
     # clear accounts so they uid/gids get assigned by sysusers.d
     && echo "root:x:0:0:root:/root:/bin/bash" > /etc/passwd \
