@@ -15,7 +15,7 @@ on:
 jobs:
   my-ostree-build:
     name: Build Custom Image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       BB_BUILDKIT_CACHE_GHA: true
     permissions:
@@ -28,9 +28,6 @@ jobs:
         recipe:
           # !! Add your recipes here
           - fedora-kinoite-laptop.yml
-    container:
-      image: ghcr.io/prydom/ostree-buildroot:rawhide
-      options: --privileged
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -45,7 +42,7 @@ jobs:
           cli_version: ":v0.8.18-installer"
   rpm-ostree-rechunk:
     name: rpm-ostree re-encapsulate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: my-ostree-build
     permissions:
       contents: read
