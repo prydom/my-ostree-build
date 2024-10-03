@@ -28,6 +28,9 @@ jobs:
         recipe:
           # !! Add your recipes here
           - fedora-kinoite-laptop.yml
+    container:
+      image: ghcr.io/prydom/ostree-buildroot:rawhide
+      options: --privileged
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -39,7 +42,7 @@ jobs:
           registry_token: ${{ github.token }}
           pr_event_number: ${{ github.event.number }}
           use_unstable_cli: true
-          cli_version: ":20d1950530218118c6c0fff1fe5ff6b37e5d1586-installer"
+          cli_version: ":v0.8.18-installer"
   rpm-ostree-rechunk:
     name: rpm-ostree re-encapsulate
     runs-on: ubuntu-latest
