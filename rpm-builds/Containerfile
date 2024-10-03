@@ -18,7 +18,7 @@ USER root:root
 RUN \
     --mount=type=cache,dst=/var/cache/dnf,id=dnf,sharing=locked \
     cd /home/builder/rpmbuild/SPECS \
-    && sudo dnf -y builddep *.spec
+    && dnf -y builddep *.spec
 
 USER builder:builder
 RUN \
