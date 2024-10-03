@@ -131,5 +131,5 @@ runs:
         RUST_LOG_STYLE: always
         CLICOLOR_FORCE: '1'
       run: |
-        BUILD_OPTS="--compression-format gzip --build-driver podman --inspect-driver skopeo --run-driver podman"
+        BUILD_OPTS="--compression-format gzip --build-driver podman --run-driver podman"
         bluebuild build -v --push ${BUILD_OPTS} ${RECIPE_PATH}
