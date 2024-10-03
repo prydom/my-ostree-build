@@ -28,6 +28,9 @@ jobs:
         recipe:
           # !! Add your recipes here
           - fedora-kinoite-laptop.yml
+    container:
+      image: ghcr.io/prydom/ostree-buildroot:rawhide
+      options: --privileged
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4

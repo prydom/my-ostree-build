@@ -35,7 +35,7 @@ inputs:
       Whether to run the unwanted software remover to maximize build space in the GitHub builder.
       Disable this with 'false' if your image doesn't take up a lot of space and you'd rather have shorter build times.
     required: false
-    default: 'true'
+    default: 'false'
   use_unstable_cli:
     description: |
       If true, this action pulls the `main` branch of blue-build/cli instead of the stable version the current action version is configured to use by default.
@@ -108,11 +108,11 @@ runs:
       env:
         CLI_VERSION_TAG: ${{ steps.build_vars.outputs.cli_version }}
       run: |
-        docker create \
+        podman create \
           --name blue-build-installer \
           ghcr.io/blue-build/cli${{ env.CLI_VERSION_TAG }}
-        docker cp blue-build-installer:/out/bluebuild /usr/local/bin/bluebuild
-        docker rm blue-build-installer
+        podman cp blue-build-installer:/out/bluebuild /usr/local/bin/bluebuild
+        podman rm blue-build-installer
         bluebuild --version
 
     # blue-build/cli does the heavy lifting
