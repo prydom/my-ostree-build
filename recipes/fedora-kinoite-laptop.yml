@@ -183,6 +183,8 @@ modules:
         - ydotool.service
       disabled:
         - dmraid-activation.service
+        - sssd-kcm.service
+        - sssd-kcm.socket
       masked:
       unmasked:
     user:
