@@ -223,5 +223,5 @@ modules:
       # a similar file exists in /usr/lib/sysusers.d so just delete it
       - rm /*.conf
       # WORKAROUND: remove dnf attributes while I work out why `rpm-ostree compose container-encapsulate` is stripping them causing ostree to fail to decapsulate
-      - setfattr -x user.librepo.checksum.mtime /usr/share/local-rpm-repo/* || true
-      - setfattr -x user.librepo.checksum.sha256 /usr/share/local-rpm-repo/* || true
+      - setfattr -x user.librepo.checksum.mtime /usr/share/local-rpm-repo/* /usr/share/local-rpm-repo/repodata/* || true
+      - setfattr -x user.librepo.checksum.sha256 /usr/share/local-rpm-repo/* /usr/share/local-rpm-repo/repodata/* || true
