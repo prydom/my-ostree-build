@@ -31,8 +31,5 @@ RUN \
     # Virtualization packages install files in /boot we don't want
     && rm -rf /boot \
     && mkdir -m 755 /boot \
-    # rpm-ostree creates /40-rpmostree-pkg-usermod-qemu-kvm.conf for some reason
-    # a similar file exists in /usr/lib/sysusers.d so just delete it
-    && rm -f /*.conf \
   && echo "========== End Upgrade ==========" \
   && ostree container commit
