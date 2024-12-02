@@ -104,6 +104,7 @@ jobs:
             --bootable \
             --consume \
             "--selinux-policy=$PWD/checkout" \
+            --generate-composefs-metadata \
             checkout
       - name: Re-encapsulate image
         id: re-encapsulate
