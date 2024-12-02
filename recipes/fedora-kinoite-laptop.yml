@@ -44,13 +44,6 @@ modules:
       - systemd-ukify
       - zstd
 
-  # We use a stable kernel instead of the one from rawhide
-  - type: script
-    snippets:
-      # the cliwrap `kernel-install` script will delete old /usr/lib/modules directories and regenerate our initramfs for us
-      - rpm-ostree cliwrap install-to-root /
-      - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel --experimental --from repo=fedora-41-kernel-updates
-
   # Package management
   - type: rpm-ostree
     install:
@@ -75,6 +68,13 @@ modules:
     snippets:
       - createrepo /usr/share/local-rpm-repo
       - ostree-dnf-upgrade.py --distrosync
+
+  # We use a stable kernel instead of the one from rawhide
+  - type: script
+    snippets:
+      # the cliwrap `kernel-install` script will delete old /usr/lib/modules directories and regenerate our initramfs for us
+      - rpm-ostree cliwrap install-to-root /
+      - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel --experimental --from repo=fedora-41-kernel-updates
 
   # Virtualization
   - type: rpm-ostree
