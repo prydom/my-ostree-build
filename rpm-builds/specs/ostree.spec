@@ -8,7 +8,7 @@
 Summary: Tool for managing bootable, immutable filesystem trees
 Name: ostree
 Version: 2024.9
-Release: 2_jxpryde
+Release: 3_jxpryde
 License: LGPL-2.0-or-later
 URL: https://ostreedev.github.io/ostree/
 
