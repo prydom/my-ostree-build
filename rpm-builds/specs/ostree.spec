@@ -108,8 +108,7 @@ the functionality of the installed %{name} package.
 %prep
 git clone --recursive https://github.com/ostreedev/ostree.git ostree-clone
 cd ostree-clone
-git fetch origin pull/3346/head:pr-3346
-git checkout pr-3346
+git checkout 74efebdf50d3b444a9b54f716508585c176ceed5
 cd ..
 %setup -T -D -n ostree-clone
 
