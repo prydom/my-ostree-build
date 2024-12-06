@@ -1,3 +1,5 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 # image will be published to ghcr.io/<user>/<name>
 name: fedora-kinoite-laptop
 # description will be included in the image's metadata
@@ -186,13 +188,13 @@ modules:
         - dmraid-activation.service
         - sssd-kcm.service
         - sssd-kcm.socket
-      masked:
-      unmasked:
+      masked: []
+      unmasked: []
     user:
-      enabled:
-      disabled:
-      masked:
-      unmasked:
+      enabled: []
+      disabled: []
+      masked: []
+      unmasked: []
 
   # BUST LAYER CACHE IF THERE ARE UPDATES
   # We still download packages from whatever repo is suggested by Fedora's metalink
