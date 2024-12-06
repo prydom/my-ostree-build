@@ -39,7 +39,7 @@ jobs:
           registry_token: ${{ github.token }}
           pr_event_number: ${{ github.event.number }}
           use_unstable_cli: true
-          cli_version: ":v0.8.18-installer"
+          cli_version: ":v0.9.0-installer"
   rpm-ostree-rechunk:
     name: rpm-ostree re-encapsulate
     runs-on: ubuntu-24.04
