@@ -184,11 +184,16 @@ modules:
         - systemd-timesyncd.service
         - tailscaled.service
         - ydotool.service
+        - sshd.service
       disabled:
         - dmraid-activation.service
         - sssd-kcm.service
         - sssd-kcm.socket
-      masked: []
+        - systemd-homed.service
+        - systemd-timesyncd.service
+      masked:
+        - bootloader-update.service
+        - bootupd.service
       unmasked: []
     user:
       enabled: []
