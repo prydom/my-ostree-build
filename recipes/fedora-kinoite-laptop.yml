@@ -37,6 +37,23 @@ modules:
     containerfiles:
       - copyrpms
 
+  # Package management
+  - type: rpm-ostree
+    install:
+      - createrepo_c
+      - dnf5
+      - python3-libdnf5
+
+  # Generate yum/rpm repo for additional local packages
+  # AND
+  # Forces the image to be in sync with mirrors before the larger package overlays
+  # We do this again later on with a cache bust.
+  - type: script
+    snippets:
+      - createrepo /usr/share/local-rpm-repo
+      - dnf distro-sync -y
+      #- ostree-dnf-upgrade.py --distrosync
+
   # Secure Boot and initramfs
   - type: rpm-ostree
     install:
@@ -46,13 +63,6 @@ modules:
       - systemd-ukify
       - zstd
 
-  # Package management
-  - type: rpm-ostree
-    install:
-      - createrepo_c
-      - dnf5
-      - python3-libdnf5
-
   # We want to use openh264 if it's asked for
   # WORKAROUND: We need to do this before the distro-sync below
   #             because my distro-sync doesn't process obsoletes
@@ -61,15 +71,6 @@ modules:
       - openh264
     remove:
       - noopenh264
-
-  # Generate yum/rpm repo for additional local packages
-  # AND
-  # Forces the image to be in sync with mirrors before the larger package overlays
-  # We do this again later on with a cache bust.
-  - type: script
-    snippets:
-      - createrepo /usr/share/local-rpm-repo
-      - ostree-dnf-upgrade.py --distrosync
 
   # We use a stable kernel instead of the one from rawhide
   - type: script
