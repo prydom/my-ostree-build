@@ -28,8 +28,8 @@ modules:
         destination: /etc/pki
       - source: system/etc/dracut.conf.d
         destination: /etc/dracut.conf.d
-      - source: system/usr/sbin
-        destination: /usr/sbin
+      - source: system/usr/bin
+        destination: /usr/bin
       - source: system/rpms
         destination: /usr/share/local-rpm-repo
 
