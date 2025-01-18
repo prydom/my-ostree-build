@@ -54,7 +54,7 @@ modules:
       # the cliwrap `kernel-install` script will delete old /usr/lib/modules directories and regenerate our initramfs for us
       - rpm-ostree cliwrap install-to-root /
       # Remove the rawhide kernel before distro-sync
-      - dnf remove kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel
+      - dnf remove -y kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel
       - dnf distro-sync -y
       #- ostree-dnf-upgrade.py --distrosync
 
