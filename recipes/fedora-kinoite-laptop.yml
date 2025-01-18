@@ -48,14 +48,17 @@ modules:
   # AND
   # Forces the image to be in sync with mirrors before the larger package overlays
   # We do this again later on with a cache bust.
+  # AND
+  # We use a stable kernel instead of the one from rawhide
   - type: script
     snippets:
       - createrepo /usr/share/local-rpm-repo
       # the cliwrap `kernel-install` script will delete old /usr/lib/modules directories and regenerate our initramfs for us
       - rpm-ostree cliwrap install-to-root /
       # Remove the rawhide kernel before distro-sync
-      - dnf remove -y kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel
-      - dnf distro-sync -y
+      - dnf5 distro-sync -y
+      - dnf5 remove -y kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel
+      - dnf5 install -y kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel
       #- ostree-dnf-upgrade.py --distrosync
 
   # Secure Boot and initramfs
@@ -75,11 +78,6 @@ modules:
       - openh264
     remove:
       - noopenh264
-
-  # We use a stable kernel instead of the one from rawhide
-  - type: script
-    snippets:
-      - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel --experimental --from repo=fedora-41-kernel-updates
 
   # Virtualization
   - type: rpm-ostree
