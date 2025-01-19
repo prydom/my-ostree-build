@@ -53,13 +53,14 @@ modules:
   - type: script
     snippets:
       - createrepo /usr/share/local-rpm-repo
-      # Remove the rawhide kernel before distro-sync
+      # distro-sync will install the fedora 41 kernel but dnf5 doesn't handle kernel-install correctly
       - dnf5 distro-sync -y
+      # Remove all kernels
       - dnf5 remove -y kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel
       # the cliwrap `kernel-install` script will delete old /usr/lib/modules directories and regenerate our initramfs for us
       - rpm-ostree cliwrap install-to-root /
+      # reinstall the kernel and handle initramfs via the cliwrap code (this is deprecated so we probably want to switch back to regen-initramfs.sh at some point)
       - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel --experimental --from repo=fedora-41-kernel-updates
-      #- ostree-dnf-upgrade.py --distrosync
 
   # Secure Boot and initramfs
   - type: rpm-ostree
