@@ -42,7 +42,6 @@ modules:
     install:
       - createrepo_c
       - dnf5
-      - python3-libdnf5
 
   # Generate yum/rpm repo for additional local packages
   # AND
@@ -62,6 +61,11 @@ modules:
       # reinstall the kernel and handle initramfs via the cliwrap code (this is deprecated so we probably want to switch back to regen-initramfs.sh at some point)
       - rpm-ostree override replace kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel --experimental --from repo=fedora-41-kernel-updates
 
+  # Package management
+  - type: rpm-ostree
+    install:
+    - python3-libdnf5
+
   # Secure Boot and initramfs
   - type: rpm-ostree
     install:
@@ -70,15 +74,6 @@ modules:
       - systemd-boot-unsigned
       - systemd-ukify
       - zstd
-
-  # We want to use openh264 if it's asked for
-  # WORKAROUND: We need to do this before the distro-sync below
-  #             because my distro-sync doesn't process obsoletes
-  - type: rpm-ostree
-    install:
-      - openh264
-    remove:
-      - noopenh264
 
   # Virtualization
   - type: rpm-ostree
@@ -99,6 +94,7 @@ modules:
       # Media
       - libva-utils
       - mpv
+      - openh264
       # RPMFusion
       - ffmpeg
       - ffmpeg-libs
