@@ -57,7 +57,7 @@ modules:
       # Remove all kernels, to ensure there's only one kernel per image
       - dnf5 remove -y kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel
       # reinstall the kernel
-      - dnf5 install -y kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel --experimental --from repo=fedora-41-kernel-updates
+      - dnf5 install -y kernel-modules-core kernel-modules-extra kernel-core kernel-modules kernel-devel kernel
       # generate initramfs
       - regen-initramfs.sh
 
