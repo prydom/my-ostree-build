@@ -217,6 +217,7 @@ modules:
       - echo "root:x:0:0:root:/root:/bin/bash" > /etc/passwd
       - echo "root:x:0:" > /etc/group
       - echo "wheel:x:10:" >> /etc/group
+      - rm -f /etc/shadow /etc/gshadow
       # Put back /opt
       - rm /opt
       - ln -s var/opt /opt
