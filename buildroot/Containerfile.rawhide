@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora:rawhide
+FROM ghcr.io/prydom/fedora:rawhide
 
 RUN dnf -y upgrade && \
      dnf -y install \
