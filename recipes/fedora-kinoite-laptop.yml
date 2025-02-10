@@ -213,6 +213,13 @@ modules:
 
   - type: script
     snippets:
+      # Replace /home with symlink
+      - rm -rf /home
+      - ln -s /var/home /home
+      # Create nix store directory - chmod 000 because mounted over
+      - mkdir -m 000 /nix
+      # Remove unwanted files
+      - rm /40-rpmostree-pkg-usermod-qemu-kvm.conf || true
       # clear accounts so they uid/gids get assigned by sysusers.d
       - echo "root:x:0:0:root:/root:/bin/bash" > /etc/passwd
       - echo "root:x:0:" > /etc/group
