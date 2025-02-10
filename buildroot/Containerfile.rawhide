@@ -2,7 +2,7 @@ FROM ghcr.io/prydom/fedora:rawhide
 
 RUN dnf -y upgrade \
     && dnf -y distro-sync \
-    && dnf -y install \
+    && dnf -y install --allowerasing \
         buildah \
         dbus-daemon \
         distribution-gpg-keys \
