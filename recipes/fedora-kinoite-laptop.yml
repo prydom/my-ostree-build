@@ -215,7 +215,7 @@ modules:
     snippets:
       # Replace /home with symlink
       - rm -rf /home
-      - ln -s /var/home /home
+      - ln -s var/home /home
       # Create nix store directory - chmod 000 because mounted over
       - mkdir -m 000 /nix
       # Remove unwanted files
