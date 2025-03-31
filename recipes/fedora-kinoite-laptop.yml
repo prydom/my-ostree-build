@@ -52,7 +52,7 @@ modules:
   - type: script
     snippets:
       - createrepo /usr/share/local-rpm-repo
-      # distro-sync will install the fedora 41 kernel but dnf5 doesn't handle kernel-install correctly
+      # distro-sync will install the fedora 42 kernel but dnf5 doesn't handle kernel-install correctly
       - dnf5 distro-sync -y
 
   # Package management, Secure Boot and initramfs
