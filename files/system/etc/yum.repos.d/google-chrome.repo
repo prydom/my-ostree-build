@@ -4,4 +4,4 @@ baseurl=https://dl.google.com/linux/chrome/rpm/stable/x86_64
 enabled=1
 repo_gpgcheck=1
 gpgcheck=0
-gpgkey=https://dl.google.com/linux/linux_signing_key.pub
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-google
