@@ -5,20 +5,19 @@ algorithms and decoding only VC1 algorithm.
 %global with_hardware 1
 %global with_radeonsi 1
 %global with_vmware 1
-%global with_vulkan_hw 0
+%global with_vulkan_hw 1
 %global with_vdpau 1
 %global with_va 1
 %if !0%{?rhel}
 %global with_r300 1
 %global with_r600 1
 %global with_nine 0
-#%%if 0%%{?with_vulkan_hw}
+%if 0%{?with_vulkan_hw}
 %global with_nvk %{with_vulkan_hw}
-#%%endif
-%global with_omx 0
+%endif
 %global with_opencl 0
 %endif
-#%%global base_vulkan %%{?with_vulkan_hw:,amd}%%{!?with_vulkan_hw:%%{nil}}
+%global base_vulkan %{?with_vulkan_hw:,amd}%{!?with_vulkan_hw:%{nil}}
 %endif
 
 #%%ifnarch %%{ix86}
@@ -33,13 +32,13 @@ algorithms and decoding only VC1 algorithm.
 %global with_iris   0
 %global with_xa     0
 %global with_intel_clc 0
-#%%global intel_platform_vulkan %%{?with_vulkan_hw:,intel,intel_hasvk}%%{!?with_vulkan_hw:%%{nil}}
+%global intel_platform_vulkan %{?with_vulkan_hw:,intel,intel_hasvk}%{!?with_vulkan_hw:%{nil}}
 %endif
-#%%ifarch x86_64
-#%%if !0%%{?with_vulkan_hw}
-%global with_intel_vk_rt 0
-#%%endif
-#%%endif
+%ifarch x86_64
+%if !0%{?with_vulkan_hw}
+%global with_intel_vk_rt 1
+%endif
+%endif
 
 %ifarch aarch64 x86_64 %{ix86}
 %global with_kmsro     0
@@ -53,7 +52,7 @@ algorithms and decoding only VC1 algorithm.
 %global with_panfrost  0
 %global with_v3d       0
 %global with_xa        0
-#%%global extra_platform_vulkan %%{?with_vulkan_hw:,broadcom,freedreno,panfrost,imagination-experimental}%%{!?with_vulkan_hw:%%{nil}}
+%global extra_platform_vulkan %{?with_vulkan_hw:,broadcom,freedreno,panfrost,imagination-experimental}%{!?with_vulkan_hw:%{nil}}
 %endif
 
 %if !0%{?rhel}
@@ -67,13 +66,13 @@ algorithms and decoding only VC1 algorithm.
 %bcond_with valgrind
 %endif
 
-#%%global vulkan_drivers swrast%%{?base_vulkan}%%{?intel_platform_vulkan}%%{?extra_platform_vulkan}%%{?with_nvk:,nouveau}
+%global vulkan_drivers swrast,virtio%{?base_vulkan}%{?intel_platform_vulkan}%{?extra_platform_vulkan}%{?with_nvk:,nouveau}
 
 Name:           %{srcname}-freeworld
 Summary:        Mesa graphics libraries
-%global ver 24.2.3
+%global ver 25.0.4
 Version:        %{lua:ver = string.gsub(rpm.expand("%{ver}"), "-", "~"); print(ver)}
-Release:        3%{?dist}
+Release:        1%{?dist}
 License:        MIT AND BSD-3-Clause AND SGI-B-2.0
 URL:            http://www.mesa3d.org
 
@@ -84,6 +83,20 @@ Source0:        https://archive.mesa3d.org/%{srcname}-%{ver}.tar.xz
 Source1:        Mesa-MLAA-License-Clarification-Email.txt
 Source2:        org.mesa3d.vaapi.freeworld.metainfo.xml
 Source3:        org.mesa3d.vdpau.freeworld.metainfo.xml
+
+# Backport of https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33805
+# to fix clover with libclc from LLVM 20.
+# to fix clover with libclc from LLVM 20.
+Patch20:        e4eb5e80c316c0af3fff310ca89e1175d81556c1.patch
+
+# Backport of https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/32038
+# and fixes: vulkan/wsi: implement the Wayland color management protocol
+Patch21:        0001-increase-required-wayland-protocols-version-to-1.41.patch
+Patch22:        0002-vulkan-wsi-implement-the-Wayland-color-management-pr.patch
+Patch23:        0003-vulkan-wsi-implement-support-for-VK_EXT_hdr_metadata.patch
+Patch24:        0004-vulkan-wsi-handle-the-compositor-not-supporting-exte.patch
+Patch25:        0001-meson-update-wayland-protocols-source_hash.patch
+Patch26:        0001-docs-features-add-VK_EXT_hdr_metadata.patch
 
 BuildRequires:  meson >= 1.3.0
 BuildRequires:  gcc
@@ -137,29 +150,23 @@ BuildRequires:  pkgconfig(vdpau) >= 1.1
 %if 0%{?with_va}
 BuildRequires:  pkgconfig(libva) >= 0.38.0
 %endif
-%if 0%{?with_omx}
-BuildRequires:  pkgconfig(libomxil-bellagio)
-%endif
 BuildRequires:  pkgconfig(libelf)
 BuildRequires:  pkgconfig(libglvnd) >= 1.3.2
 BuildRequires:  llvm-devel >= 7.0.0
-#%%if 0%%{?fedora} >= 41
-#BuildRequires:  llvm-devel >= 19.0.0
-#%%endif
 %if 0%{?with_teflon}
 BuildRequires:  flatbuffers-devel
 BuildRequires:  flatbuffers-compiler
 BuildRequires:  xtensor-devel
 %endif
 %if 0%{?with_opencl} || 0%{?with_nvk} || 0%{?with_intel_clc}
-BuildRequires:  rust-packaging
-%endif
-%ifarch %{ix86} x86_64
 BuildRequires:  clang-devel
-BuildRequires:  bindgen
 BuildRequires:  pkgconfig(libclc)
 BuildRequires:  pkgconfig(SPIRV-Tools)
 BuildRequires:  pkgconfig(LLVMSPIRVLib)
+%endif
+%if 0%{?with_opencl} || 0%{?with_nvk}
+BuildRequires:  bindgen
+BuildRequires:  rust-packaging
 %endif
 %if 0%{?with_nvk}
 BuildRequires:  cbindgen
@@ -192,7 +199,6 @@ BuildRequires:  pkgconfig(vulkan)
 %package        -n %{srcname}-va-drivers-freeworld
 Summary:        Mesa-based VA-API drivers
 Requires:       %{srcname}-filesystem%{?_isa} = %{?epoch:%{epoch}:}%{version}
-Conflicts:      %{srcname}-va-drivers%{?_isa}
 
 %description    -n %{srcname}-va-drivers-freeworld
 %{_description}
@@ -207,6 +213,25 @@ Conflicts:      %{srcname}-vdpau-drivers%{?_isa}
 %description 	-n %{srcname}-vdpau-drivers-freeworld
 %{_description}
 %endif
+
+%package -n %{srcname}-vulkan-drivers-freeworld
+Summary:        Mesa Vulkan drivers
+Requires:       vulkan%{_isa}
+Requires:       %{srcname}-filesystem%{?_isa} = %{?epoch:%{epoch}:}%{version}
+Provides:       %{srcname}-vulkan-drivers = %{?epoch:%{epoch}:}%{version}
+Provides:       %{srcname}-vulkan-drivers%{?_isa} = %{?epoch:%{epoch}:}%{version}
+Obsoletes:      mesa-vulkan-devel < %{?epoch:%{epoch}:}%{version}-%{release}
+# the following conflict is needed until we can find a way to install freeworld
+# drivers in parallel to Fedora's; for ideas how to realize this see:
+# * https://github.com/KhronosGroup/Vulkan-Loader/issues/1647 and its backstory:
+#   https://lists.freedesktop.org/archives/mesa-dev/2025-February/226460.html
+# * https://gitlab.freedesktop.org/mesa/mesa/-/issues/12606
+Conflicts:      %{srcname}-vulkan-drivers%{?_isa}
+
+%description -n %{srcname}-vulkan-drivers-freeworld
+The drivers with support for the Vulkan with support for acclerating decoding
+and encoding of various video codecs.
+
 %prep
 %autosetup -n %{srcname}-%{ver} -p1
 cp %{SOURCE1} docs/
@@ -214,6 +239,19 @@ cp %{SOURCE1} docs/
 %build
 # ensure standard Rust compiler flags are set
 export RUSTFLAGS="%build_rustflags"
+
+%if 0%{?with_nvk}
+export MESON_PACKAGE_CACHE_DIR="%{cargo_registry}/"
+# So... Meson can't actually find them without tweaks
+%define inst_crate_nameversion() %(basename %{cargo_registry}/%{1}-*)
+%define rewrite_wrap_file() sed -e "/source.*/d" -e "s/%{1}-.*/%{inst_crate_nameversion %{1}}/" -i subprojects/%{1}.wrap
+
+%rewrite_wrap_file proc-macro2
+%rewrite_wrap_file quote
+%rewrite_wrap_file syn
+%rewrite_wrap_file unicode-ident
+%rewrite_wrap_file paste
+%endif
 
 # We've gotten a report that enabling LTO for mesa breaks some games. See
 # https://bugzilla.redhat.com/show_bug.cgi?id=1862771 for details.
@@ -226,7 +264,6 @@ export RUSTFLAGS="%build_rustflags"
   -Ddri-drivers-path=%{_libdir}/dri-freeworld \
   -Dva-libs-path=%{_libdir}/dri-freeworld \
   -Dplatforms=x11,wayland \
-  -Ddri3=enabled \
   -Dosmesa=false \
 %if 0%{?with_hardware}
   -Dgallium-drivers=swrast,virgl,nouveau%{?with_r300:,r300}%{?with_crocus:,crocus}%{?with_i915:,i915}%{?with_iris:,iris}%{?with_vmware:,svga}%{?with_radeonsi:,radeonsi}%{?with_r600:,r600}%{?with_freedreno:,freedreno}%{?with_etnaviv:,etnaviv}%{?with_tegra:,tegra}%{?with_vc4:,vc4}%{?with_v3d:,v3d}%{?with_lima:,lima}%{?with_panfrost:,panfrost}%{?with_vulkan_hw:,zink} \
@@ -234,7 +271,6 @@ export RUSTFLAGS="%build_rustflags"
   -Dgallium-drivers=swrast,virgl \
 %endif
   -Dgallium-vdpau=%{?with_vdpau:enabled}%{!?with_vdpau:disabled} \
-  -Dgallium-omx=%{!?with_omx:bellagio}%{?with_omx:disabled} \
   -Dgallium-va=%{?with_va:enabled}%{!?with_va:disabled} \
   -Dgallium-xa=%{!?with_xa:enabled}%{?with_xa:disabled} \
   -Dgallium-nine=%{!?with_nine:true}%{?with_nine:false} \
@@ -247,8 +283,8 @@ export RUSTFLAGS="%build_rustflags"
   -Dvulkan-drivers=%{?vulkan_drivers} \
   -Dvulkan-layers=device-select \
   -Dshared-glapi=enabled \
-  -Dgles1=disabled \
-  -Dgles2=disabled \
+  -Dgles1=enabled \
+  -Dgles2=enabled \
   -Dopengl=true \
   -Dgbm=disabled \
   -Dglx=dri \
@@ -305,7 +341,7 @@ done
 popd
 
 # strip unneeded files from va-api and vdpau
-rm -rf %{buildroot}%{_datadir}/{drirc.d,glvnd,vulkan}
+rm -rf %{buildroot}%{_datadir}/{drirc.d/00-mesa-defaults.conf,glvnd}
 rm -rf %{buildroot}%{_libdir}{,/dri-freeworld}/{d3d,EGL,gallium-pipe,libGLX,pkgconfig}
 rm -rf %{buildroot}%{_includedir}/{d3dadapter,EGL,GL,KHR}
 rm -fr %{buildroot}%{_sysconfdir}/OpenGL
@@ -320,12 +356,20 @@ rm -fr %{buildroot}%{_libdir}{,/dri-freeworld}/libxatracker.so*
 rm -fr %{buildroot}%{_includedir}/xa_*.h
 rm -fr %{buildroot}%{_libdir}/libMesaOpenCL.so*
 rm -fr %{buildroot}%{_libdir}/dri/*_dri.so
-rm -fr %{buildroot}%{_libdir}/libvulkan*.so
-rm -fr %{buildroot}%{_libdir}{,/dri-freeworld}/libVkLayer_MESA_device_select.so
+rm -fr %{buildroot}%{_includedir}/GLES*
+rm -fr %{buildroot}%{_libdir}/dri-freeworld/libGLES*
+rm -fr %{buildroot}%{_prefix}/lib%{_libdir}/dri-freeworld/libGLES*
+
+# ld.so.conf.d file
+install -m 0755 -d  %{buildroot}%{_sysconfdir}/ld.so.conf.d/
+echo -e "%{_libdir}/dri-freeworld/ \n" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_lib}.conf
 
 %if 0%{?with_va}
+%post -n %{srcname}-va-drivers-freeworld -p /sbin/ldconfig
+%postun -n %{srcname}-va-drivers-freeworld -p /sbin/ldconfig
 %files -n %{srcname}-va-drivers-freeworld
-%{_libdir}/dri-freeworld/libgallium-%{version}.so
+%config %{_sysconfdir}/ld.so.conf.d/%{name}-%{_lib}.conf
+%{_libdir}/dri-freeworld/libgallium-%{ver}.so
 %{_libdir}/dri-freeworld/nouveau_drv_video.so
 %if 0%{?with_r600}
 %{_libdir}/dri-freeworld/r600_drv_video.so
@@ -352,7 +396,144 @@ rm -fr %{buildroot}%{_libdir}{,/dri-freeworld}/libVkLayer_MESA_device_select.so
 %license docs/license.rst
 %endif
 
+%files -n %{srcname}-vulkan-drivers-freeworld
+%{_libdir}/dri-freeworld/libvulkan_lvp.so
+%{_datadir}/vulkan/icd.d/lvp_icd.*.json
+%{_libdir}/dri-freeworld/libvulkan_virtio.so
+%{_datadir}/vulkan/icd.d/virtio_icd.*.json
+%{_libdir}/dri-freeworld/libVkLayer_MESA_device_select.so
+%{_datadir}/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json
+%if 0%{?with_vulkan_hw}
+%{_libdir}/dri-freeworld/libvulkan_radeon.so
+%{_datadir}/drirc.d/00-radv-defaults.conf
+%{_datadir}/vulkan/icd.d/radeon_icd.*.json
+%if 0%{?with_nvk}
+%{_libdir}/dri-freeworld/libvulkan_nouveau.so
+%{_datadir}/vulkan/icd.d/nouveau_icd.*.json
+%endif
+%ifarch %{ix86} x86_64
+%{_libdir}/dri-freeworld/libvulkan_intel.so
+%{_datadir}/vulkan/icd.d/intel_icd.*.json
+%{_libdir}/dri-freeworld/libvulkan_intel_hasvk.so
+%{_datadir}/vulkan/icd.d/intel_hasvk_icd.*.json
+%endif
+%ifarch aarch64 x86_64 %{ix86}
+%{_libdir}/dri-freeworld/libvulkan_broadcom.so
+%{_datadir}/vulkan/icd.d/broadcom_icd.*.json
+%{_libdir}/dri-freeworld/libvulkan_freedreno.so
+%{_datadir}/vulkan/icd.d/freedreno_icd.*.json
+%{_libdir}/dri-freeworld/libvulkan_panfrost.so
+%{_datadir}/vulkan/icd.d/panfrost_icd.*.json
+%{_libdir}/dri-freeworld/libpowervr_rogue.so
+%{_libdir}/dri-freeworld/libvulkan_powervr_mesa.so
+%{_datadir}/vulkan/icd.d/powervr_mesa_icd.*.json
+%endif
+%endif
+
 %changelog
+* Thu Apr 3 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 25.0.3-1
+- Update to 25.0.3
+
+* Thu Mar 27 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 25.0.2-2
+- pick up backport and fixes from Fedora for clover/llvm20 and
+  vulkan/wsi: implement the Wayland color management protocol
+
+* Thu Mar 20 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 25.0.2-1
+- Update to 25.0.2
+
+* Thu Mar 06 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 25.0.1-1
+- Update to 25.0.1
+- drop 0001-vulkan-wsi-x11-fix-use-of-uninitialised-xfixes-regio.patch
+
+* Thu Feb 20 2025 Björn Esser <besser82@fedoraproject.org> - 25.0.0-4
+- Add archless provides for mesa-vulkan-drivers
+
+* Thu Feb 20 2025 Björn Esser <besser82@fedoraproject.org> - 25.0.0-3
+- Fix mesa-filesystem requires in mesa-vulkan-drivers-freeworld
+
+* Thu Feb 20 2025 Björn Esser <besser82@fedoraproject.org> - 25.0.0-2
+- Fix general installability of mesa-vulkan-drivers-freeworld
+
+* Wed Feb 19 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 25.0.0-1
+- Update to 25.0.0
+- add 0001-vulkan-wsi-x11-fix-use-of-uninitialised-xfixes-regio.patch
+
+* Thu Feb 13 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 25.0.0~rc3-1
+- Update to 25.0.0~rc3
+
+* Tue Feb 11 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 25.0.0~rc2-2
+- create mesa-vulkan-drivers-freeworld, conflicting with mesa-vulkan-drivers
+
+* Thu Feb 06 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 25.0.0~rc2-1
+- Update to 25.0.0~rc2
+- drop upstreamed patch
+
+* Tue Jan 28 2025 Björn Esser <besser82@fedoraproject.org> - 24.3.4-8
+- Add patch for radeonsi to disallow compute queues on Raven/Raven2
+  due to hangs
+
+* Mon Jan 27 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 24.3.4-7
+- Drop conflicts with mesa-va-drivers, as its files do not conclict
+  anymore with the ones in mesa-va-drivers-freeworld
+- Drop now unneeded BR on a specific LLVM version
+
+* Fri Jan 24 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 24.3.4-6
+- Rebuild due to mishap with the release number
+
+* Fri Jan 24 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 24.3.4-2
+- Reapply ldconfig changes from Leigh
+- Enable GLES stuff and exclude some of the files now getting build
+
+* Fri Jan 24 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 24.3.4-1
+- Update to 24.3.4
+
+* Fri Jan 17 2025 Leigh Scott <leigh123linux@gmail.com> - 24.3.3-5
+- Remove ldconfig as it breaks some apps
+
+* Sat Jan 11 2025 Leigh Scott <leigh123linux@gmail.com> - 24.3.3-4
+- Fix ldconfig scriptlets
+
+* Sat Jan 11 2025 Leigh Scott <leigh123linux@gmail.com> - 24.3.3-3
+- Add ldconfig scriptlets
+
+* Fri Jan 10 2025 Leigh Scott <leigh123linux@gmail.com> - 24.3.3-2
+- Fix tearing due to fedora libgallium
+
+* Fri Jan 10 2025 Thorsten Leemhuis <fedora@leemhuis.info> - 24.3.3-1
+- Update to 24.3.3
+
+* Fri Dec 20 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.3.2-1
+- Update to 24.3.2
+
+* Thu Dec 05 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.3.1-1
+- Update to 24.3.1
+
+* Fri Nov 22 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.3.0-1
+- Update to 24.3.0
+
+* Thu Nov 14 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.3.0~rc2-1
+- Update to 24.3.0-rc2
+
+* Tue Nov 12 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.3.0~rc1-1
+- Update to 24.3.0-rc1
+- Drop unneeded omx support
+
+* Thu Oct 31 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.2.6-1
+- Update to 24.2.6
+
+* Mon Oct 28 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.2.5-1
+- Update to 24.2.5
+
+* Fri Oct 04 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.2.4-1
+- Update to 24.2.4
+- drop 0001-gallium-Don-t-pass-avx512er-and-avx512pf-features-on.patch
+
+* Sun Sep 29 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.2.3-5
+- rebuild for -Ehuman-not-enough-tee-error
+
+* Sun Sep 29 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.2.3-4
+- add 0001-gallium-Don-t-pass-avx512er-and-avx512pf-features-on.patch
+
 * Wed Sep 25 2024 Thorsten Leemhuis <fedora@leemhuis.info> - 24.2.3-3
 - temporarily require llvm 19 for Fedora 41 and up
 
