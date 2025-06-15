@@ -10,6 +10,7 @@ type=rpm
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-42-$basearch
 includepkgs=kernel*
+excludepkgs=kernel-tools
 priority=98
 skip_if_unavailable=False
 
@@ -24,6 +25,7 @@ type=rpm
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-42-$basearch
 includepkgs=kernel*
+excludepkgs=kernel-tools
 priority=98
 skip_if_unavailable=False
 
@@ -38,6 +40,7 @@ type=rpm
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-42-$basearch
 includepkgs=kernel*
+excludepkgs=kernel-tools
 priority=98
 skip_if_unavailable=False
 
@@ -53,6 +56,7 @@ type=rpm
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-42-$basearch
 includepkgs=kernel*
+excludepkgs=kernel-tools
 priority=98
 skip_if_unavailable=False
 
@@ -67,6 +71,7 @@ type=rpm
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-42-$basearch
 includepkgs=kernel*
+excludepkgs=kernel-tools
 priority=98
 skip_if_unavailable=False
 
@@ -81,5 +86,6 @@ type=rpm
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-42-$basearch
 includepkgs=kernel*
+excludepkgs=kernel-tools
 priority=98
 skip_if_unavailable=False
