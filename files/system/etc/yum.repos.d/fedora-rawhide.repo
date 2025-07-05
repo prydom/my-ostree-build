@@ -21,7 +21,7 @@
 
 [rawhide]
 name=Fedora - Rawhide - Developmental packages for the next Fedora release
-baseurl=https://download-ib01.fedoraproject.org/pub/fedora/linux/development/rawhide/Everything/$basearch/os/
+baseurl=https://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/Everything/$basearch/os/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=rawhide&arch=$basearch
 enabled=1
 countme=1
@@ -35,8 +35,8 @@ excludepkgs=kernel*
 
 [rawhide-debuginfo]
 name=Fedora - Rawhide - Debug
-#baseurl=http://download.example/pub/fedora/linux/development/rawhide/Everything/$basearch/debug/tree/
-metalink=https://mirrors.fedoraproject.org/metalink?repo=rawhide-debug&arch=$basearch
+baseurl=https://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/Everything/$basearch/debug/tree/
+#metalink=https://mirrors.fedoraproject.org/metalink?repo=rawhide-debug&arch=$basearch
 enabled=0
 metadata_expire=6h
 repo_gpgcheck=0
@@ -47,8 +47,8 @@ skip_if_unavailable=False
 
 [rawhide-source]
 name=Fedora - Rawhide - Source
-#baseurl=http://download.example/pub/fedora/linux/development/rawhide/Everything/source/tree/
-metalink=https://mirrors.fedoraproject.org/metalink?repo=rawhide-source&arch=$basearch
+baseurl=https://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/Everything/source/tree/
+#metalink=https://mirrors.fedoraproject.org/metalink?repo=rawhide-source&arch=$basearch
 enabled=0
 metadata_expire=6h
 repo_gpgcheck=0
