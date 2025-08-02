@@ -163,6 +163,7 @@ modules:
       - vim
       - ydotool
       - zsh
+      - waypipe
 
   # this sets up the proper policy & signing files for signed images to work fully
   - type: signing
