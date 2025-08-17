@@ -94,7 +94,7 @@ modules:
       # Media
       - libva-utils
       - mpv
-      - openh264
+      #- openh264
       # RPMFusion
       - ffmpeg
       - ffmpeg-libs
