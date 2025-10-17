@@ -30,7 +30,7 @@ jobs:
           - fedora-kinoite-laptop.yml
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Build Custom Image
         uses: ./.github/actions/bluebuild
         with:

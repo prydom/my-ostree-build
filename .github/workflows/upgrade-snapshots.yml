@@ -32,7 +32,7 @@ jobs:
           ln -sr /etc/containers/auth.json ~/.docker/config.json
           buildah login ghcr.io --authfile /etc/containers/auth.json -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Build and push
         id: build-and-push
         continue-on-error: true # This failing will usually just mean there were no updates
