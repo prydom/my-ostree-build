@@ -54,7 +54,7 @@ jobs:
           DIGEST: ${{ steps.build-and-push.outputs.DIGEST }}
         shell: bash
         run: |
-          cosign sign --key=env://COSIGN_PRIVATE_KEY --recursive "ghcr.io/${{ github.actor }}/${{ matrix.image }}@$DIGEST"
+          cosign sign --new-bundle-format=false --use-signing-config=false --key=env://COSIGN_PRIVATE_KEY --recursive "ghcr.io/${{ github.actor }}/${{ matrix.image }}@$DIGEST"
       - name: Pass job
         shell: bash
         run: /usr/bin/true

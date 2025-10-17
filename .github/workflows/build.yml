@@ -134,7 +134,7 @@ jobs:
           DIGEST: ${{ steps.re-encapsulate.outputs.DIGEST }}
         shell: bash
         run: |
-          cosign sign --key=env://COSIGN_PRIVATE_KEY --recursive "ghcr.io/${{ github.actor }}/${{ matrix.image }}@$DIGEST"
+          cosign sign --new-bundle-format=false --use-signing-config=false --key=env://COSIGN_PRIVATE_KEY --recursive "ghcr.io/${{ github.actor }}/${{ matrix.image }}@$DIGEST"
       - name: Delete ostree repo
         shell: bash
         run: |
@@ -155,7 +155,7 @@ jobs:
           DIGEST: ${{ steps.re-compress.outputs.DIGEST }}
         shell: bash
         run: |
-          cosign sign --key=env://COSIGN_PRIVATE_KEY --recursive "ghcr.io/${{ github.actor }}/${{ matrix.image }}@$DIGEST"
+          cosign sign --new-bundle-format=false --use-signing-config=false --key=env://COSIGN_PRIVATE_KEY --recursive "ghcr.io/${{ github.actor }}/${{ matrix.image }}@$DIGEST"
       - name: Replace snapshot tag (if on default branch)
         env:
           DIGEST: ${{ steps.re-compress.outputs.DIGEST }}
