@@ -1,7 +1,7 @@
 [koji]
 name=Koji $basearch
 baseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/$basearch/
-enabled=1
+enabled=0
 gpgcheck=0
 repo_gpgcheck=0
 # DISABLE KOJI WHEN NOT BROKEN
