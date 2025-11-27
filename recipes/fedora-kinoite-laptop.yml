@@ -106,7 +106,6 @@ modules:
       # Replace with freeworld packages from rpmfusion
       - libavfilter-free
       - libavformat-free
-      - libpostproc-free
       - libswresample-free
       - libavutil-free
       - libswscale-free
