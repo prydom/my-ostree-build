@@ -46,7 +46,7 @@ skip_if_unavailable=False
 
 [fedora-43-kernel-updates]
 name=Fedora 43 kernel - Updates - $basearch
-baseurl=https://dl.fedoraproject.org/pub/fedora/linux/releases/43/Everything/$basearch/os/
+baseurl=https://dl.fedoraproject.org/pub/fedora/linux/updates/43/Everything/$basearch/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f43&arch=$basearch
 enabled=1
 countme=1
@@ -62,7 +62,7 @@ skip_if_unavailable=False
 
 [fedora-43-kernel-debuginfo-updates]
 name=Fedora 43 kernel - Updates - $basearch - Debug
-baseurl=https://dl.fedoraproject.org/pub/fedora/linux/releases/43/Everything/$basearch/debug/tree/
+baseurl=https://dl.fedoraproject.org/pub/fedora/linux/updates/43/Everything/$basearch/debug/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-debug-f43&arch=$basearch
 enabled=0
 metadata_expire=6h
@@ -77,7 +77,7 @@ skip_if_unavailable=False
 
 [fedora-43-kernel-source-updates]
 name=Fedora 43 kernel - Updates - Source
-baseurl=https://dl.fedoraproject.org/pub/fedora/linux/releases/43/Everything/source/tree/
+baseurl=https://dl.fedoraproject.org/pub/fedora/linux/updates/43/Everything/source/tree/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-source-f43&arch=$basearch
 enabled=0
 metadata_expire=6h
