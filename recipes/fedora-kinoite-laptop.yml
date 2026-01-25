@@ -52,9 +52,9 @@ modules:
   - type: rpm-ostree
     remove:
       - plasma-login-manager
+      - kde-settings-plasmalogin
     install:
       - sddm
-
 
   # Package management, Secure Boot and initramfs
   - type: rpm-ostree
