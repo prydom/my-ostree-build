@@ -12,13 +12,6 @@ image-version: rawhide
 # module configuration, executed in order
 # you can include multiple instances of the same module
 modules:
-  - type: script
-    snippets:
-      # WORKAROUND: for packages which deploy to /opt
-      # TODO: look at switching to ostree-state-overlay@opt.service
-      - rm /opt
-      - ln -s usr/lib/opt /opt
-
   # copy only files needed by rpm and dracut
   - type: files
     files:
@@ -49,7 +42,7 @@ modules:
   # AND
   # Forces the image to be in sync with mirrors before the larger package overlays
   # We do this again later on with a cache bust.
-  - type: script
+  - type: script@v2
     snippets:
       - createrepo /usr/share/local-rpm-repo
       # distro-sync will install the fedora 42 kernel but dnf5 doesn't handle kernel-install correctly
