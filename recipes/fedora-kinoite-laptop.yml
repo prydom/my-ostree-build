@@ -53,6 +53,7 @@ modules:
     remove:
       - plasma-login-manager
       - kde-settings-plasmalogin
+      - kcm-plasmalogin
     install:
       - sddm
 
