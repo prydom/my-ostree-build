@@ -48,6 +48,14 @@ modules:
       # distro-sync will install the fedora 42 kernel but dnf5 doesn't handle kernel-install correctly
       - dnf5 distro-sync -y
 
+  # WORKAROUND plasma-login-manager doesn't work yet on my machine, switch back to sddm
+  - type: rpm-ostree
+    remove:
+      - plasma-login-manager
+    install:
+      - sddm
+
+
   # Package management, Secure Boot and initramfs
   - type: rpm-ostree
     install:
