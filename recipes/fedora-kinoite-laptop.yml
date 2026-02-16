@@ -104,7 +104,6 @@ modules:
       - ffmpeg-libs
       - gstreamer1-plugins-bad-freeworld
       - gstreamer1-plugins-ugly
-      - gstreamer1-vaapi
       - mesa-va-drivers-freeworld
     remove:
       # Replace with freeworld packages from rpmfusion
