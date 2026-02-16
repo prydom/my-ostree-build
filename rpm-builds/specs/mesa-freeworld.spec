@@ -42,7 +42,7 @@ algorithms and decoding only VC1 algorithm.
 
 %ifarch aarch64 x86_64 %{ix86}
 %if !0%{?rhel}
-%global with_asahi     1
+%global with_asahi     0
 %global with_d3d12     1
 %global with_etnaviv   0
 %global with_lima      0
@@ -72,7 +72,7 @@ algorithms and decoding only VC1 algorithm.
 
 %global vulkan_drivers swrast%{?base_vulkan}%{?intel_platform_vulkan}%{?asahi_platform_vulkan}%{?extra_platform_vulkan}%{?with_nvk:,nouveau}%{?with_virtio:,virtio}%{?with_d3d12:,microsoft-experimental}
 
-%if 0%{?with_nvk} && 0%{?rhel}
+%if 0%{?with_nvk}
 %global vendor_nvk_crates 1
 %endif
 
@@ -178,13 +178,13 @@ BuildRequires:  flatbuffers-devel
 BuildRequires:  flatbuffers-compiler
 BuildRequires:  xtensor-devel
 %endif
-%if 0%{?with_opencl} || 0%{?with_nvk} || 0%{?with_asahi} || 0%{?with_panfrost}
+%if 1
 BuildRequires:  clang-devel
 BuildRequires:  pkgconfig(libclc)
 BuildRequires:  pkgconfig(SPIRV-Tools)
 BuildRequires:  pkgconfig(LLVMSPIRVLib)
 %endif
-%if 0%{?with_opencl} || 0%{?with_nvk}
+%if 1
 BuildRequires:  bindgen
 %if 0%{?rhel}
 BuildRequires:  rust-toolset
@@ -192,7 +192,7 @@ BuildRequires:  rust-toolset
 BuildRequires:  cargo-rpm-macros
 %endif
 %endif
-%if 0%{?with_nvk}
+%if 1
 BuildRequires:  cbindgen
 %endif
 %if %{with valgrind}
@@ -236,7 +236,7 @@ Obsoletes:      mesa-vulkan-devel < %{?epoch:%{epoch}:}%{version}-%{release}
 Obsoletes:      VK_hdr_layer < 1
 # the following conflict is needed until we can find a way to install freeworld
 # drivers in parallel to Fedora's; for ideas how to realize this see:
-# * https://github.com/KhronosGroup/Vulkan-Loader/issues/1647 and its backstory: 
+# * https://github.com/KhronosGroup/Vulkan-Loader/issues/1647 and its backstory:
 #   https://lists.freedesktop.org/archives/mesa-dev/2025-February/226460.html
 # * https://gitlab.freedesktop.org/mesa/mesa/-/issues/12606
 Conflicts:      %{srcname}-vulkan-drivers%{?_isa}
