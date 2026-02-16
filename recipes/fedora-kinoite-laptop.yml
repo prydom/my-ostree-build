@@ -186,7 +186,6 @@ modules:
         - ydotool.service
         - sshd.service
       disabled:
-        - dmraid-activation.service
         - sssd-kcm.service
         - sssd-kcm.socket
         - systemd-homed.service
