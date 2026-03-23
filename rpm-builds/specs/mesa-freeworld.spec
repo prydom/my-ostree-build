@@ -83,7 +83,7 @@ algorithms and decoding only VC1 algorithm.
 
 Name:           %{srcname}-freeworld
 Summary:        Mesa graphics libraries
-Version:        26.0.0
+Version:        26.0.3
 Release:        1%{?dist}
 License:        MIT AND BSD-3-Clause AND SGI-B-2.0
 URL:            https://mesa3d.org
@@ -236,7 +236,7 @@ Obsoletes:      mesa-vulkan-devel < %{?epoch:%{epoch}:}%{version}-%{release}
 Obsoletes:      VK_hdr_layer < 1
 # the following conflict is needed until we can find a way to install freeworld
 # drivers in parallel to Fedora's; for ideas how to realize this see:
-# * https://github.com/KhronosGroup/Vulkan-Loader/issues/1647 and its backstory:
+# * https://github.com/KhronosGroup/Vulkan-Loader/issues/1647 and its backstory: 
 #   https://lists.freedesktop.org/archives/mesa-dev/2025-February/226460.html
 # * https://gitlab.freedesktop.org/mesa/mesa/-/issues/12606
 Conflicts:      %{srcname}-vulkan-drivers%{?_isa}
@@ -505,6 +505,21 @@ echo -e "%{_libdir}/dri-freeworld/ \n" > %{buildroot}%{_sysconfdir}/ld.so.conf.d
 %endif
 
 %changelog
+* Thu Mar 19 2026 Thorsten Leemhuis <fedora@leemhuis.info> - 26.0.3-1
+- Update to 26.0.3
+
+* Fri Mar 13 2026 Thorsten Leemhuis <fedora@leemhuis.info> - 26.0.2-1
+- Update to 26.0.2
+
+* Thu Mar 05 2026 Thorsten Leemhuis <fedora@leemhuis.info> - 26.0.1-2
+- Rebuild for new llmv
+
+* Thu Feb 26 2026 Thorsten Leemhuis <fedora@leemhuis.info> - 26.0.1-1
+- Update to 26.0.1
+
+* Mon Feb 23 2026 Thorsten Leemhuis <fedora@leemhuis.info> - 26.0.0-2
+- rebuild for libdisplay-info 0.3.0
+
 * Thu Feb 12 2026 Thorsten Leemhuis <fedora@leemhuis.info> - 26.0.0-1
 - Update to 26.0.0
 - sync various bits with recent Fedora changes
