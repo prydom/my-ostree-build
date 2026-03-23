@@ -9,7 +9,8 @@ WORKDIR /home/builder
 
 USER builder:builder
 RUN \
-    rpmdev-setuptree
+    rpmdev-setuptree \
+    && USER=builder /usr/lib/rpm/rpm-setup-autosign
 COPY srpms rpmbuild/SRPMS
 COPY sources rpmbuild/SOURCES
 #RUN \

@@ -115,7 +115,6 @@ modules:
       - libavcodec-free
       - libavdevice-free
       - ffmpeg-free
-      - mesa-va-drivers
 
   - type: script
     snippets:
