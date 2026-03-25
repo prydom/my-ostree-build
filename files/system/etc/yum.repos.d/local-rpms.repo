@@ -2,7 +2,6 @@
 name=Local RPMs
 baseurl=file:///usr/share/local-rpm-repo
 enabled=1
-gpgcheck=False
-pkg_gpgcheck=False
+pkg_gpgcheck=True
 repo_gpgcheck=False
 priority=75
