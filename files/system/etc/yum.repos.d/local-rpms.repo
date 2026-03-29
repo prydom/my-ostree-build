@@ -2,7 +2,7 @@
 name=Local RPMs
 baseurl=file:///usr/share/local-rpm-repo
 enabled=1
-gpgcheck=False
-pkg_gpgcheck=False
+pkg_gpgcheck=True
 repo_gpgcheck=False
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-local-rpms
 priority=75
