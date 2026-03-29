@@ -6,17 +6,25 @@ RUN \
     && useradd -m builder
 
 WORKDIR /home/builder
-
 USER builder:builder
 RUN \
-    rpmdev-setuptree \
-    && USER=builder /usr/lib/rpm/rpm-setup-autosign
+    rpmdev-setuptree
 COPY srpms rpmbuild/SRPMS
 COPY sources rpmbuild/SOURCES
+COPY specs rpmbuild/SPECS
+COPY append-to-rpmmacros.conf /home/builder
+RUN \
+    --mount=type=tmpfs,target=/tmp \
+    --mount=type=secret,id=rpm_signing_key,target=/tmp/signing_body,uid=1000,gid=1000 \
+    cat append-to-rpmmacros.conf >> .rpmmacros \
+    && rm append-to-rpmmacros.conf \
+    && echo "-----BEGIN PGP PRIVATE KEY BLOCK-----" > /tmp/signing.asc \
+    && cat /tmp/signing_body >> /tmp/signing.asc \
+    && echo -e "\n-----END PGP PRIVATE KEY BLOCK-----" >> /tmp/signing.asc \
+    && gpg --import /tmp/signing.asc && rm /tmp/signing.asc || true
 #RUN \
 #    cd ~/rpmbuild/SRPMS \
 #    && rpm -i *.src.rpm
-COPY specs rpmbuild/SPECS
 
 USER root:root
 RUN chown -R builder:builder /home/builder
@@ -27,7 +35,8 @@ RUN \
 
 USER builder:builder
 RUN \
-    cd ~/rpmbuild/SPECS \
+    rm -rf ~/.gnupg/public-keys.d/pubring.db.lock || true \
+    && cd ~/rpmbuild/SPECS \
     && echo *.spec | xargs -n 1 -P 1 -- spectool -g -R \
     && rpmbuild -ba *.spec \
     && mkdir -p /home/builder/rpmbuild/RPMS/noarch /home/builder/rpmbuild/RPMS/repo \

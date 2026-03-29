@@ -4,4 +4,5 @@ baseurl=file:///usr/share/local-rpm-repo
 enabled=1
 pkg_gpgcheck=True
 repo_gpgcheck=False
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-local-rpms
 priority=75
