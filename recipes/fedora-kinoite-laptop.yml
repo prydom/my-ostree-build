@@ -204,7 +204,7 @@ modules:
   # But we trust UWaterloo to be somewhat quickly up to date.
   - type: containerfile
     snippets:
-      - ADD https://mirror.csclub.uwaterloo.ca/fedora/linux/development/44/Everything/x86_64/os/repodata/repomd.xml /tmp/mirror-cache-bust
+      - ADD https://dl.fedoraproject.org/pub/fedora/linux/updates/44/Everything/x86_64/repodata/repomd.xml /tmp/mirror-cache-bust
 
   # Upgrade all in one layer if there are any new packages
   - type: script
