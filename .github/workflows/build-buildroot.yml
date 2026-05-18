@@ -1,4 +1,4 @@
-name: 03 - Build buildroot container (Rawhide)
+name: 03 - Build buildroot container (Fedora 44)
 on:
   schedule:
     - cron: "24 14 * * *"
@@ -24,6 +24,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:buildroot"
-          file: "Containerfile.rawhide"
+          file: "Containerfile.fedora-44"
           push: true
-          tags: ghcr.io/prydom/ostree-buildroot:rawhide
+          tags: ghcr.io/prydom/ostree-buildroot:44

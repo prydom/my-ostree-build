@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora:rawhide AS builder
+FROM quay.io/fedora/fedora:44 AS builder
 RUN \
     --mount=type=cache,dst=/var/cache/dnf,id=dnf,sharing=locked \
     dnf -y distro-sync \

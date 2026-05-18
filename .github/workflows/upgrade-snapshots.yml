@@ -17,7 +17,7 @@ jobs:
         image:
           - fedora-kinoite-laptop
     container:
-      image: ghcr.io/prydom/ostree-buildroot:rawhide
+      image: ghcr.io/prydom/ostree-buildroot:44
       options: --privileged
     steps:
       - name: Login to registry
